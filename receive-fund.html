@@ -1,0 +1,595 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Fund | FoodShare</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eefaf2, #e2f6e9);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        h1 {
+            text-align: center;
+            color: #168653;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #168653;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .file-info {
+            font-size: 13px;
+            color: #777;
+            margin-top: 6px;
+        }
+
+        .preview {
+            display: none;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .preview img {
+            max-width: 220px;
+            max-height: 220px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #168653;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #117044;
+        }
+
+        button:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        .message {
+            display: none;
+            margin-top: 20px;
+            padding: 14px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .success {
+            background: #e8f7ee;
+            color: #168653;
+        }
+
+        .error {
+            background: #fdeaea;
+            color: #c62828;
+        }
+
+        .required {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Request Fund</h1>
+
+    <p class="subtitle">
+        Submit your fund assistance request
+    </p>
+
+    <form id="fundRequestForm" enctype="multipart/form-data">
+
+        <!-- Receiver Name -->
+        <div class="form-group">
+            <label for="receiver_name">
+                Receiver Name <span class="required">*</span>
+            </label>
+
+            <input
+                type="text"
+                id="receiver_name"
+                name="receiver_name"
+                placeholder="Enter receiver name"
+                required
+            >
+        </div>
+
+        <!-- Age -->
+        <div class="form-group">
+            <label for="age">
+                Age <span class="required">*</span>
+            </label>
+
+            <input
+                type="number"
+                id="age"
+                name="age"
+                min="1"
+                max="120"
+                placeholder="Enter age"
+                required
+            >
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+            <label for="phone">
+                Phone Number <span class="required">*</span>
+            </label>
+
+            <input
+                type="tel"
+                id="phone"
+                name="phone"
+                maxlength="10"
+                pattern="[6-9][0-9]{9}"
+                placeholder="Enter 10-digit mobile number"
+                required
+            >
+        </div>
+
+        <!-- Amount -->
+        <div class="form-group">
+            <label for="amount">
+                Required Amount (₹) <span class="required">*</span>
+            </label>
+
+            <input
+                type="number"
+                id="amount"
+                name="amount"
+                min="1"
+                step="0.01"
+                placeholder="Enter required amount"
+                required
+            >
+        </div>
+
+        <!-- Reason -->
+        <div class="form-group">
+            <label for="reason">
+                Assistance Needed For <span class="required">*</span>
+            </label>
+
+            <input
+                type="text"
+                id="reason"
+                name="reason"
+                maxlength="200"
+                placeholder="Example: Medical treatment"
+                required
+            >
+        </div>
+
+        <!-- Medical Certificate -->
+        <div class="form-group">
+
+            <label for="medical_certificate">
+                Medical Certificate <span class="required">*</span>
+            </label>
+
+            <input
+                type="file"
+                id="medical_certificate"
+                name="medical_certificate"
+                accept=".jpg,.jpeg,.png,.pdf"
+                required
+            >
+
+            <div class="file-info">
+                Accepted: JPG, JPEG, PNG or PDF. Maximum size: 5 MB.
+            </div>
+
+            <div class="preview" id="medicalPreview">
+                <img id="medicalPreviewImage" src="" alt="Medical Certificate Preview">
+            </div>
+
+        </div>
+
+        <!-- Payment QR -->
+        <div class="form-group">
+
+            <label for="payment_qr">
+                Payment QR Code <span class="required">*</span>
+            </label>
+
+            <input
+                type="file"
+                id="payment_qr"
+                name="payment_qr"
+                accept=".jpg,.jpeg,.png"
+                required
+            >
+
+            <div class="file-info">
+                Upload the QR code where donors should send the fund.
+                Accepted: JPG, JPEG or PNG. Maximum size: 5 MB.
+            </div>
+
+            <div class="preview" id="qrPreview">
+                <img id="qrPreviewImage" src="" alt="Payment QR Preview">
+            </div>
+
+        </div>
+
+        <!-- Additional Details -->
+        <div class="form-group">
+
+            <label for="details">
+                Additional Details
+            </label>
+
+            <textarea
+                id="details"
+                name="details"
+                placeholder="Provide any additional information about your request..."
+            ></textarea>
+
+        </div>
+
+        <button type="submit" id="submitButton">
+            Submit Fund Request
+        </button>
+
+        <div id="message" class="message"></div>
+
+    </form>
+
+</div>
+
+
+<script>
+
+const form = document.getElementById("fundRequestForm");
+const submitButton = document.getElementById("submitButton");
+const message = document.getElementById("message");
+
+const medicalCertificate =
+    document.getElementById("medical_certificate");
+
+const paymentQR =
+    document.getElementById("payment_qr");
+
+const medicalPreview =
+    document.getElementById("medicalPreview");
+
+const medicalPreviewImage =
+    document.getElementById("medicalPreviewImage");
+
+const qrPreview =
+    document.getElementById("qrPreview");
+
+const qrPreviewImage =
+    document.getElementById("qrPreviewImage");
+
+
+// --------------------------------------------------
+// Medical Certificate Preview
+// --------------------------------------------------
+
+medicalCertificate.addEventListener("change", function () {
+
+    const file = this.files[0];
+
+    if (!file) {
+        medicalPreview.style.display = "none";
+        return;
+    }
+
+    const maxSize = 5 * 1024 * 1024;
+
+    if (file.size > maxSize) {
+
+        alert("Medical certificate must be less than 5 MB.");
+
+        this.value = "";
+        medicalPreview.style.display = "none";
+
+        return;
+    }
+
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "application/pdf"
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+
+        alert("Please upload JPG, JPEG, PNG or PDF.");
+
+        this.value = "";
+        medicalPreview.style.display = "none";
+
+        return;
+    }
+
+    // Preview only images
+    if (file.type.startsWith("image/")) {
+
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+
+            medicalPreviewImage.src = e.target.result;
+            medicalPreview.style.display = "block";
+
+        };
+
+        reader.readAsDataURL(file);
+
+    } else {
+
+        medicalPreview.style.display = "none";
+
+    }
+
+});
+
+
+// --------------------------------------------------
+// Payment QR Preview
+// --------------------------------------------------
+
+paymentQR.addEventListener("change", function () {
+
+    const file = this.files[0];
+
+    if (!file) {
+
+        qrPreview.style.display = "none";
+
+        return;
+    }
+
+    const maxSize = 5 * 1024 * 1024;
+
+    if (file.size > maxSize) {
+
+        alert("Payment QR code must be less than 5 MB.");
+
+        this.value = "";
+        qrPreview.style.display = "none";
+
+        return;
+    }
+
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png"
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+
+        alert("Please upload the QR code as JPG, JPEG or PNG.");
+
+        this.value = "";
+        qrPreview.style.display = "none";
+
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+
+        qrPreviewImage.src = e.target.result;
+        qrPreview.style.display = "block";
+
+    };
+
+    reader.readAsDataURL(file);
+
+});
+
+
+// --------------------------------------------------
+// Submit Fund Request
+// --------------------------------------------------
+
+form.addEventListener("submit", async function (event) {
+
+    event.preventDefault();
+
+    message.style.display = "none";
+
+    // Get logged-in user
+    const userId = localStorage.getItem("foodshareUserId");
+
+    if (!userId) {
+
+        showMessage(
+            "Please sign in before submitting a fund request.",
+            "error"
+        );
+
+        return;
+    }
+
+    // Check QR
+    if (!paymentQR.files.length) {
+
+        showMessage(
+            "Please upload your payment QR code.",
+            "error"
+        );
+
+        return;
+    }
+
+    // Check medical certificate
+    if (!medicalCertificate.files.length) {
+
+        showMessage(
+            "Please upload your medical certificate.",
+            "error"
+        );
+
+        return;
+    }
+
+    // Disable button
+    submitButton.disabled = true;
+    submitButton.textContent = "Submitting...";
+
+    try {
+
+        const formData = new FormData(form);
+
+        // Add logged-in user ID
+        formData.append("user_id", userId);
+
+        const response = await fetch("apply_fund.php", {
+
+            method: "POST",
+
+            body: formData
+
+        });
+
+        const text = await response.text();
+
+        let data;
+
+        try {
+
+            data = JSON.parse(text);
+
+        } catch (jsonError) {
+
+            console.error("Server response:", text);
+
+            throw new Error(
+                "Server returned an invalid response."
+            );
+
+        }
+
+        if (!response.ok || !data.success) {
+
+            throw new Error(
+                data.message || "Unable to submit fund request."
+            );
+
+        }
+
+        showMessage(
+            "Fund request submitted successfully. Please wait for admin approval.",
+            "success"
+        );
+
+        // Reset form
+        form.reset();
+
+        medicalPreview.style.display = "none";
+        qrPreview.style.display = "none";
+
+    } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+            error.message || "Unable to connect to the server.",
+            "error"
+        );
+
+    } finally {
+
+        submitButton.disabled = false;
+        submitButton.textContent = "Submit Fund Request";
+
+    }
+
+});
+
+
+// --------------------------------------------------
+// Message
+// --------------------------------------------------
+
+function showMessage(text, type) {
+
+    message.textContent = text;
+
+    message.className = "message " + type;
+
+    message.style.display = "block";
+
+}
+
+</script>
+
+</body>
+</html>
+
+

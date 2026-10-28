@@ -1,0 +1,1214 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Donate Food | FoodShare</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eefaf2, #e2f6e9);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        header {
+            background: #168653;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #ef9d31;
+        }
+
+        .back-btn {
+            background: white;
+            color: #168653;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 850px;
+            margin: 35px auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            color: #168653;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+            color: #333;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #ccc;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #168653;
+            box-shadow: 0 0 0 2px rgba(22, 134, 83, 0.1);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .phone-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .phone-row input {
+            flex: 1;
+        }
+
+        button {
+            border: none;
+            border-radius: 9px;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .otp-btn {
+            background: #168653;
+            color: white;
+            min-width: 125px;
+        }
+
+        .otp-btn:hover {
+            background: #116c43;
+        }
+
+        .verify-btn {
+            background: #ef9d31;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .verify-btn:hover {
+            background: #d88925;
+        }
+
+        .location-btn {
+            background: #168653;
+            color: white;
+            margin-top: 8px;
+        }
+
+        .location-btn:hover {
+            background: #116c43;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: #168653;
+            color: white;
+            padding: 15px;
+            font-size: 17px;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: #116c43;
+        }
+
+        .submit-btn:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        .otp-box {
+            display: none;
+            margin-top: 12px;
+            padding: 15px;
+            background: #f4fbf7;
+            border: 1px solid #b9e5ca;
+            border-radius: 10px;
+        }
+
+        .otp-box input {
+            max-width: 250px;
+        }
+
+        .demo-otp {
+            display: none;
+            margin-top: 12px;
+            padding: 10px;
+            background: #fff4df;
+            border: 1px solid #ef9d31;
+            border-radius: 8px;
+            color: #8a5a14;
+            font-weight: bold;
+        }
+
+        .message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .success {
+            display: block;
+            background: #e8f8ef;
+            color: #12653d;
+            border: 1px solid #a9dfbe;
+        }
+
+        .error {
+            display: block;
+            background: #fff0f0;
+            color: #b42318;
+            border: 1px solid #efb1b1;
+        }
+
+        .location-status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            background: #f4f4f4;
+            color: #555;
+        }
+
+        .verified {
+            color: #168653;
+            font-weight: bold;
+        }
+
+        .required-note {
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .phone-row {
+                flex-direction: column;
+            }
+
+            .otp-btn {
+                width: 100%;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            header {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">
+        Food<span>Share</span>
+    </div>
+
+    <button class="back-btn" type="button" onclick="goBack()">
+        Back
+    </button>
+</header>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>Donate Food</h1>
+
+        <p class="subtitle">
+            Share surplus food with people who need it.
+        </p>
+
+        <p class="required-note">
+            Please verify your mobile number before submitting the donation.
+        </p>
+
+        <form id="donationForm">
+
+            <!-- DONOR NAME -->
+            <div class="form-group">
+                <label for="donor_name">Donor Name</label>
+                <input
+                    type="text"
+                    id="donor_name"
+                    name="donor_name"
+                    placeholder="Enter your name"
+                    required
+                >
+            </div>
+
+            <!-- MOBILE NUMBER -->
+            <div class="form-group">
+
+                <label for="contact">
+                    Mobile Number
+                </label>
+
+                <div class="phone-row">
+
+                    <input
+                        type="tel"
+                        id="contact"
+                        name="contact"
+                        maxlength="10"
+                        inputmode="numeric"
+                        placeholder="10-digit mobile number"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="otp-btn"
+                        id="sendOtpBtn"
+                    >
+                        Send OTP
+                    </button>
+
+                </div>
+
+                <div id="otpMessage" class="message"></div>
+
+                <!-- OTP SECTION -->
+                <div id="otpBox" class="otp-box">
+
+                    <label for="otp">
+                        Enter OTP
+                    </label>
+
+                    <input
+                        type="text"
+                        id="otp"
+                        maxlength="6"
+                        inputmode="numeric"
+                        placeholder="Enter 6-digit OTP"
+                    >
+
+                    <br>
+
+                    <button
+                        type="button"
+                        class="verify-btn"
+                        id="verifyOtpBtn"
+                    >
+                        Verify OTP
+                    </button>
+
+                    <div
+                        id="demoOtp"
+                        class="demo-otp"
+                    ></div>
+
+                    <div
+                        id="verifyMessage"
+                        class="message"
+                    ></div>
+
+                </div>
+
+            </div>
+
+            <!-- FOOD TYPE -->
+            <div class="form-group">
+                <label for="food_type">Food Type</label>
+
+                <input
+                    type="text"
+                    id="food_type"
+                    name="food_type"
+                    placeholder="Example: Rice, Biryani, Vegetables"
+                    required
+                >
+            </div>
+
+            <!-- QUANTITY -->
+            <div class="form-group">
+                <label for="quantity">Quantity</label>
+
+                <input
+                    type="text"
+                    id="quantity"
+                    name="quantity"
+                    placeholder="Example: 10 plates"
+                    required
+                >
+            </div>
+
+            <!-- PICKUP DATE/TIME -->
+            <div class="form-group">
+                <label for="pickup_datetime">
+                    Pickup Date & Time
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="pickup_datetime"
+                    name="pickup_datetime"
+                    required
+                >
+            </div>
+
+            <!-- EXPIRY DATE/TIME -->
+            <div class="form-group">
+                <label for="expiry_datetime">
+                    Food Expiry Date & Time
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="expiry_datetime"
+                    name="expiry_datetime"
+                    required
+                >
+            </div>
+
+            <!-- LOCALITY -->
+            <div class="form-group">
+                <label for="locality">Locality</label>
+
+                <input
+                    type="text"
+                    id="locality"
+                    name="locality"
+                    placeholder="Example: Nizamabad"
+                    required
+                >
+            </div>
+
+            <!-- LOCATION -->
+            <div class="form-group">
+
+                <label for="location_name">
+                    Pickup Location
+                </label>
+
+                <button
+                    type="button"
+                    class="location-btn"
+                    id="getLocationBtn"
+                >
+                    Get My Location
+                </button>
+
+                <div
+                    id="locationStatus"
+                    class="location-status"
+                >
+                    Pickup location has not been selected.
+                </div>
+
+                <input
+                    type="hidden"
+                    id="location_name"
+                    name="location_name"
+                    value=""
+                >
+
+            </div>
+
+            <!-- DETAILS -->
+            <div class="form-group">
+                <label for="details">
+                    Additional Details
+                </label>
+
+                <textarea
+                    id="details"
+                    name="details"
+                    placeholder="Enter any additional information about the food..."
+                ></textarea>
+            </div>
+
+            <button
+                type="submit"
+                class="submit-btn"
+                id="submitBtn"
+                disabled
+            >
+                Verify OTP and Location First
+            </button>
+
+            <div
+                id="formMessage"
+                class="message"
+            ></div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+"use strict";
+
+/* -------------------------------------------------------
+   FOODSHARE DONOR FOOD DONATION
+   Twilio completely removed.
+   Uses local/demo OTP through PHP sessions.
+------------------------------------------------------- */
+
+const donationForm = document.getElementById("donationForm");
+
+const donorNameInput = document.getElementById("donor_name");
+const contactInput = document.getElementById("contact");
+
+const sendOtpBtn = document.getElementById("sendOtpBtn");
+const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+
+const otpBox = document.getElementById("otpBox");
+const otpInput = document.getElementById("otp");
+
+const otpMessage = document.getElementById("otpMessage");
+const verifyMessage = document.getElementById("verifyMessage");
+const demoOtp = document.getElementById("demoOtp");
+
+const getLocationBtn = document.getElementById("getLocationBtn");
+const locationStatus = document.getElementById("locationStatus");
+const locationNameInput = document.getElementById("location_name");
+
+const submitBtn = document.getElementById("submitBtn");
+const formMessage = document.getElementById("formMessage");
+
+let phoneIsVerified = false;
+let locationIsReady = false;
+
+
+/* -------------------------------------------------------
+   GET LOGGED-IN USER
+------------------------------------------------------- */
+
+const userId = localStorage.getItem("foodshareUserId");
+const userRole = localStorage.getItem("foodshareUserRole");
+const currentUser = localStorage.getItem("foodshareCurrentUser");
+
+if (!userId) {
+
+    alert("Please sign in first.");
+
+    window.location.href = "signin.html";
+
+} else if (userRole && userRole.toLowerCase() !== "donor") {
+
+    alert("Only donor accounts can donate food.");
+
+    window.location.href = "receiver.html";
+}
+
+
+/* -------------------------------------------------------
+   PREFILL DONOR NAME
+------------------------------------------------------- */
+
+if (currentUser) {
+
+    try {
+
+        const userData = JSON.parse(currentUser);
+
+        if (userData.name) {
+            donorNameInput.value = userData.name;
+        }
+
+        if (userData.username && !donorNameInput.value) {
+            donorNameInput.value = userData.username;
+        }
+
+    } catch (error) {
+
+        console.log("Could not read foodshareCurrentUser.");
+
+    }
+}
+
+
+/* -------------------------------------------------------
+   MESSAGE FUNCTIONS
+------------------------------------------------------- */
+
+function showMessage(element, message, type) {
+
+    element.textContent = message;
+
+    element.className = "message " + type;
+
+}
+
+function clearMessage(element) {
+
+    element.textContent = "";
+
+    element.className = "message";
+
+}
+
+
+/* -------------------------------------------------------
+   UPDATE SUBMIT BUTTON
+------------------------------------------------------- */
+
+function updateSubmitButton() {
+
+    if (phoneIsVerified && locationIsReady) {
+
+        submitBtn.disabled = false;
+
+        submitBtn.textContent = "Submit Food Donation";
+
+    } else {
+
+        submitBtn.disabled = true;
+
+        if (!phoneIsVerified && !locationIsReady) {
+
+            submitBtn.textContent =
+                "Verify OTP and Location First";
+
+        } else if (!phoneIsVerified) {
+
+            submitBtn.textContent =
+                "Verify OTP First";
+
+        } else {
+
+            submitBtn.textContent =
+                "Get Pickup Location First";
+        }
+    }
+}
+
+
+/* -------------------------------------------------------
+   SEND OTP
+------------------------------------------------------- */
+
+sendOtpBtn.addEventListener("click", async function () {
+
+    clearMessage(otpMessage);
+    clearMessage(verifyMessage);
+
+    const phone = contactInput.value.trim();
+
+    if (!/^[6-9][0-9]{9}$/.test(phone)) {
+
+        showMessage(
+            otpMessage,
+            "Enter a valid 10-digit Indian mobile number.",
+            "error"
+        );
+
+        return;
+    }
+
+    sendOtpBtn.disabled = true;
+    sendOtpBtn.textContent = "Sending...";
+
+    try {
+
+        const formData = new FormData();
+
+        formData.append("phone", phone);
+
+        const response = await fetch("send_otp.php", {
+            method: "POST",
+            body: formData
+        });
+
+        const rawText = await response.text();
+
+        console.log("send_otp.php response:", rawText);
+
+        let result;
+
+        try {
+
+            result = JSON.parse(rawText);
+
+        } catch (jsonError) {
+
+            throw new Error(
+                "Server returned invalid response: " +
+                rawText.substring(0, 200)
+            );
+        }
+
+        if (!result.success) {
+
+            throw new Error(
+                result.message || "Unable to generate OTP."
+            );
+        }
+
+        /*
+         * OTP box appears after successful OTP generation.
+         */
+
+        otpBox.style.display = "block";
+
+        phoneIsVerified = false;
+
+        contactInput.readOnly = true;
+
+        showMessage(
+            otpMessage,
+            "Demo OTP generated successfully. Enter the OTP shown below.",
+            "success"
+        );
+
+        /*
+         * Because there is no SMS provider, show the OTP
+         * directly for your project demonstration.
+         */
+
+        if (result.demo_otp) {
+
+            demoOtp.style.display = "block";
+
+            demoOtp.textContent =
+                "Demo OTP: " + result.demo_otp;
+        }
+
+        otpInput.focus();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+            otpMessage,
+            error.message,
+            "error"
+        );
+
+    } finally {
+
+        sendOtpBtn.disabled = false;
+        sendOtpBtn.textContent = "Send OTP";
+    }
+
+});
+
+
+/* -------------------------------------------------------
+   VERIFY OTP
+------------------------------------------------------- */
+
+verifyOtpBtn.addEventListener("click", async function () {
+
+    clearMessage(verifyMessage);
+
+    const phone = contactInput.value.trim();
+    const otp = otpInput.value.trim();
+
+    if (!/^[6-9][0-9]{9}$/.test(phone)) {
+
+        showMessage(
+            verifyMessage,
+            "Invalid mobile number.",
+            "error"
+        );
+
+        return;
+    }
+
+    if (!/^[0-9]{6}$/.test(otp)) {
+
+        showMessage(
+            verifyMessage,
+            "Enter the 6-digit OTP.",
+            "error"
+        );
+
+        return;
+    }
+
+    verifyOtpBtn.disabled = true;
+    verifyOtpBtn.textContent = "Verifying...";
+
+    try {
+
+        const formData = new FormData();
+
+        formData.append("phone", phone);
+        formData.append("otp", otp);
+
+        const response = await fetch("verify_otp.php", {
+            method: "POST",
+            body: formData
+        });
+
+        const rawText = await response.text();
+
+        console.log("verify_otp.php response:", rawText);
+
+        let result;
+
+        try {
+
+            result = JSON.parse(rawText);
+
+        } catch (jsonError) {
+
+            throw new Error(
+                "Server returned invalid response: " +
+                rawText.substring(0, 200)
+            );
+        }
+
+        if (!result.success) {
+
+            throw new Error(
+                result.message || "OTP verification failed."
+            );
+        }
+
+        phoneIsVerified = true;
+
+        otpInput.disabled = true;
+        verifyOtpBtn.disabled = true;
+        sendOtpBtn.disabled = true;
+
+        demoOtp.style.display = "none";
+
+        showMessage(
+            verifyMessage,
+            "Mobile number verified successfully.",
+            "success"
+        );
+
+        updateSubmitButton();
+
+    } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+            verifyMessage,
+            error.message,
+            "error"
+        );
+
+    } finally {
+
+        if (!phoneIsVerified) {
+
+            verifyOtpBtn.disabled = false;
+            verifyOtpBtn.textContent = "Verify OTP";
+
+        } else {
+
+            verifyOtpBtn.textContent = "Verified";
+        }
+    }
+
+});
+
+
+/* -------------------------------------------------------
+   GET LOCATION
+------------------------------------------------------- */
+
+getLocationBtn.addEventListener("click", function () {
+
+    clearMessage(formMessage);
+
+    if (!navigator.geolocation) {
+
+        locationStatus.textContent =
+            "Geolocation is not supported by this browser.";
+
+        return;
+    }
+
+    getLocationBtn.disabled = true;
+    getLocationBtn.textContent = "Getting Location...";
+
+    locationStatus.textContent =
+        "Please allow location access in your browser.";
+
+    navigator.geolocation.getCurrentPosition(
+
+        async function (position) {
+
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            locationStatus.textContent =
+                "Location found. Getting address...";
+
+            try {
+
+                /*
+                 * Latitude and longitude are used only temporarily
+                 * to obtain the readable address.
+                 *
+                 * They are NOT stored in food_donations.
+                 */
+
+                const url =
+                    "https://nominatim.openstreetmap.org/reverse" +
+                    "?format=jsonv2" +
+                    "&lat=" + encodeURIComponent(latitude) +
+                    "&lon=" + encodeURIComponent(longitude) +
+                    "&zoom=18" +
+                    "&addressdetails=1";
+
+                const response = await fetch(url, {
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                });
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to get address from location."
+                    );
+                }
+
+                const data = await response.json();
+
+                let readableLocation =
+                    data.display_name || "";
+
+                if (!readableLocation) {
+
+                    throw new Error(
+                        "Address could not be identified."
+                    );
+                }
+
+                locationNameInput.value =
+                    readableLocation;
+
+                locationIsReady = true;
+
+                locationStatus.innerHTML =
+                    "<strong>Pickup Location:</strong><br>" +
+                    readableLocation;
+
+                getLocationBtn.textContent =
+                    "Location Selected";
+
+                updateSubmitButton();
+
+            } catch (error) {
+
+                console.error(error);
+
+                locationIsReady = false;
+
+                locationStatus.textContent =
+                    "Could not determine the address. Please try again.";
+
+                getLocationBtn.disabled = false;
+                getLocationBtn.textContent =
+                    "Get My Location";
+
+                updateSubmitButton();
+            }
+        },
+
+        function (error) {
+
+            console.error(error);
+
+            locationIsReady = false;
+
+            let message =
+                "Unable to get your location.";
+
+            if (error.code === 1) {
+
+                message =
+                    "Location permission was denied. Please allow location access.";
+
+            } else if (error.code === 2) {
+
+                message =
+                    "Your location could not be determined.";
+
+            } else if (error.code === 3) {
+
+                message =
+                    "Location request timed out.";
+            }
+
+            locationStatus.textContent = message;
+
+            getLocationBtn.disabled = false;
+            getLocationBtn.textContent =
+                "Get My Location";
+
+            updateSubmitButton();
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
+        }
+    );
+
+});
+
+
+/* -------------------------------------------------------
+   SUBMIT DONATION
+------------------------------------------------------- */
+
+donationForm.addEventListener("submit", async function (event) {
+
+    event.preventDefault();
+
+    clearMessage(formMessage);
+
+    if (!phoneIsVerified) {
+
+        showMessage(
+            formMessage,
+            "Please verify your mobile number first.",
+            "error"
+        );
+
+        return;
+    }
+
+    if (!locationIsReady || !locationNameInput.value.trim()) {
+
+        showMessage(
+            formMessage,
+            "Please get the pickup location first.",
+            "error"
+        );
+
+        return;
+    }
+
+    if (!userId || Number(userId) <= 0) {
+
+        showMessage(
+            formMessage,
+            "Your login session is invalid. Please sign in again.",
+            "error"
+        );
+
+        return;
+    }
+
+    const pickup = document.getElementById(
+        "pickup_datetime"
+    ).value;
+
+    const expiry = document.getElementById(
+        "expiry_datetime"
+    ).value;
+
+    if (!pickup || !expiry) {
+
+        showMessage(
+            formMessage,
+            "Please select pickup and expiry date/time.",
+            "error"
+        );
+
+        return;
+    }
+
+    const pickupDate = new Date(pickup);
+    const expiryDate = new Date(expiry);
+
+    if (expiryDate <= pickupDate) {
+
+        showMessage(
+            formMessage,
+            "Expiry time must be after pickup time.",
+            "error"
+        );
+
+        return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting...";
+
+    try {
+
+        const formData =
+            new FormData(donationForm);
+
+        formData.append(
+            "user_id",
+            userId
+        );
+
+        const response = await fetch(
+            "add_food.php",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+        const rawText = await response.text();
+
+        console.log(
+            "add_food.php response:",
+            rawText
+        );
+
+        let result;
+
+        try {
+
+            result = JSON.parse(rawText);
+
+        } catch (jsonError) {
+
+            throw new Error(
+                "Server returned invalid response: " +
+                rawText.substring(0, 300)
+            );
+        }
+
+        if (!result.success) {
+
+            throw new Error(
+                result.message ||
+                "Food donation could not be saved."
+            );
+        }
+
+        showMessage(
+            formMessage,
+            "Food donation submitted successfully.",
+            "success"
+        );
+
+        donationForm.reset();
+
+        contactInput.readOnly = false;
+
+        otpBox.style.display = "none";
+
+        demoOtp.style.display = "none";
+
+        locationStatus.textContent =
+            "Pickup location has not been selected.";
+
+        locationNameInput.value = "";
+
+        phoneIsVerified = false;
+        locationIsReady = false;
+
+        updateSubmitButton();
+
+        /*
+         * Return to donor dashboard after a short delay.
+         */
+
+        setTimeout(function () {
+
+            window.location.href = "donor.html";
+
+        }, 1500);
+
+    } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+            formMessage,
+            error.message,
+            "error"
+        );
+
+        submitBtn.disabled = false;
+
+        updateSubmitButton();
+    }
+
+});
+
+
+/* -------------------------------------------------------
+   BACK BUTTON
+------------------------------------------------------- */
+
+function goBack() {
+
+    window.location.href = "donor.html";
+
+}
+
+
+/* -------------------------------------------------------
+   INITIAL STATE
+------------------------------------------------------- */
+
+updateSubmitButton();
+
+</script>
+
+</body>
+</html>

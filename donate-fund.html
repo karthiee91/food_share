@@ -1,0 +1,980 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fund Donation | FoodShare</title>
+
+    <style>
+        :root {
+            --green: #168653;
+            --dark-green: #10663f;
+            --orange: #ef9d31;
+            --background: #eefaf2;
+            --text: #24332b;
+            --muted: #66756b;
+            --border: #dce9df;
+            --white: #ffffff;
+            --danger: #c62828;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--text);
+            background: linear-gradient(135deg, #eefaf2, #e2f6e9);
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--white);
+            padding: 17px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 12px #163c2010;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+            color: var(--green);
+        }
+
+        .logo span {
+            color: var(--orange);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button,
+        .nav-link {
+            font: inherit;
+            cursor: pointer;
+            border: none;
+            border-radius: 9px;
+            padding: 11px 16px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .secondary {
+            background: #edf5ef;
+            color: var(--dark-green);
+        }
+
+        .primary {
+            background: var(--green);
+            color: white;
+        }
+
+        .primary:hover {
+            background: var(--dark-green);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        main {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 34px 18px 55px;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .intro h1 {
+            margin: 0 0 12px;
+            color: var(--dark-green);
+            font-size: clamp(27px, 4vw, 38px);
+        }
+
+        .intro p {
+            color: var(--muted);
+            line-height: 1.6;
+            margin: 0 auto;
+            max-width: 650px;
+        }
+
+        .notice {
+            border-radius: 10px;
+            padding: 13px 15px;
+            margin: 0 0 20px;
+            line-height: 1.5;
+            display: none;
+            overflow-wrap: anywhere;
+        }
+
+        .notice.success {
+            display: block;
+            background: #e4f7e9;
+            color: #176238;
+            border: 1px solid #b7e4c2;
+        }
+
+        .notice.error {
+            display: block;
+            background: #fff0ef;
+            color: #a51f1f;
+            border: 1px solid #f2c6c3;
+        }
+
+        .notice.info {
+            display: block;
+            background: #edf5ff;
+            color: #214e7a;
+            border: 1px solid #c9dff7;
+        }
+
+        .requests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+        }
+
+        .request-card {
+            background: var(--white);
+            border-radius: 17px;
+            padding: 22px;
+            box-shadow: 0 6px 24px #21492a0d;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .request-card h2 {
+            font-size: 21px;
+            margin: 0;
+            color: var(--dark-green);
+            overflow-wrap: anywhere;
+        }
+
+        .reason {
+            color: var(--muted);
+            line-height: 1.55;
+            overflow-wrap: anywhere;
+        }
+
+        .status {
+            display: inline-block;
+            align-self: flex-start;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: #e4f7e9;
+            color: #176238;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .amounts {
+            background: #f5faf6;
+            border-radius: 11px;
+            padding: 13px;
+            line-height: 1.9;
+        }
+
+        .amount-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .amount-row strong {
+            text-align: right;
+            overflow-wrap: anywhere;
+        }
+
+        .progress-track {
+            height: 8px;
+            background: #dce9df;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--green);
+            width: 0%;
+            transition: width 0.2s ease;
+        }
+
+        .empty-state {
+            background: white;
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            color: var(--muted);
+            grid-column: 1 / -1;
+            line-height: 1.6;
+        }
+
+        .payment-panel {
+            margin-top: 34px;
+            background: white;
+            padding: 25px;
+            border-radius: 17px;
+            border: 1px solid var(--border);
+            box-shadow: 0 6px 24px #21492a0d;
+            display: none;
+        }
+
+        .payment-panel h2 {
+            margin-top: 0;
+            color: var(--dark-green);
+        }
+
+        .payment-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 25px;
+        }
+
+        .payment-details {
+            min-width: 0;
+            line-height: 1.7;
+        }
+
+        .qr-container {
+            text-align: center;
+            background: #f7fbf8;
+            border: 1px dashed #c6ddcb;
+            border-radius: 12px;
+            padding: 18px;
+            min-width: 0;
+        }
+
+        .qr-container img {
+            display: block;
+            width: 100%;
+            max-width: 250px;
+            max-height: 300px;
+            object-fit: contain;
+            margin: 12px auto;
+            border-radius: 8px;
+        }
+
+        .qr-fallback {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .field {
+            margin-top: 17px;
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+
+        input {
+            display: block;
+            width: 100%;
+            border: 1px solid #cbd9ce;
+            border-radius: 9px;
+            padding: 12px;
+            font: inherit;
+            outline-color: var(--green);
+        }
+
+        .help-text {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+            margin-top: 8px;
+        }
+
+        .submit-button {
+            margin-top: 18px;
+            width: 100%;
+            padding: 13px;
+        }
+
+        .small-note {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+            margin-top: 15px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        @media (max-width: 650px) {
+            .payment-layout {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 15px 4%;
+            }
+
+            main {
+                padding: 25px 13px 40px;
+            }
+
+            .payment-panel {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Food<span>Share</span></div>
+
+    <div class="header-actions">
+        <a class="nav-link secondary" href="donor.html">Back to Dashboard</a>
+        <button class="primary" id="refreshButton" type="button">
+            Refresh Requests
+        </button>
+    </div>
+</header>
+
+<main>
+    <section class="intro">
+        <h1>Fund Donation</h1>
+        <p>
+            Support approved people who need financial assistance.
+            Choose a request, pay using UPI, and submit your transaction
+            reference for admin verification.
+        </p>
+    </section>
+
+    <div id="globalMessage" class="notice" role="status" aria-live="polite"></div>
+
+    <section>
+        <div id="requestsGrid" class="requests-grid">
+            <div class="empty-state">Loading approved fund requests...</div>
+        </div>
+    </section>
+
+    <section class="payment-panel" id="paymentPanel">
+        <h2>Complete Your Fund Donation</h2>
+
+        <div id="paymentMessage" class="notice"
+             role="status" aria-live="polite"></div>
+
+        <div class="payment-layout">
+            <div class="payment-details">
+                <h3 id="selectedReceiver">Selected receiver</h3>
+
+                <p id="selectedReason" class="reason"></p>
+
+                <div class="amounts">
+                    <div class="amount-row">
+                        <span>Requested amount</span>
+                        <strong id="selectedTotal">₹0.00</strong>
+                    </div>
+
+                    <div class="amount-row">
+                        <span>Already donated</span>
+                        <strong id="selectedDonated">₹0.00</strong>
+                    </div>
+
+                    <div class="amount-row">
+                        <span>Remaining amount</span>
+                        <strong id="selectedRemaining">₹0.00</strong>
+                    </div>
+                </div>
+
+                <p class="help-text">
+                    1. Scan the receiver's UPI QR code using your UPI app.
+                    <br>
+                    2. Pay an amount up to the remaining requested amount.
+                    <br>
+                    3. Copy the UPI transaction reference from your payment app.
+                    <br>
+                    4. Enter that reference below and submit it.
+                </p>
+
+                <form id="paymentForm">
+                    <div class="field">
+                        <label for="transactionRef">
+                            UPI Transaction Reference / UTR *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="transactionRef"
+                            name="transaction_ref"
+                            maxlength="150"
+                            autocomplete="off"
+                            placeholder="Enter the reference from your UPI app"
+                            required
+                        >
+                    </div>
+
+                    <p class="help-text">
+                        Enter the actual reference from your completed payment.
+                        Do not enter a made-up reference.
+                    </p>
+
+                    <button class="primary submit-button"
+                            id="submitPaymentButton"
+                            type="submit">
+                        Submit for Verification
+                    </button>
+                </form>
+            </div>
+
+            <div class="qr-container">
+                <h3>Receiver UPI QR Code</h3>
+
+                <div id="qrContent">
+                    <p class="qr-fallback">
+                        Select a fund request to view payment information.
+                    </p>
+                </div>
+
+                <p class="small-note">
+                    Verify the receiver and amount in your UPI app before paying.
+                    Keep your UPI confirmation for your records.
+                </p>
+            </div>
+        </div>
+
+        <p class="small-note">
+            Submitting a transaction reference does not confirm that money
+            was received. The donation remains pending until an administrator
+            verifies the payment.
+        </p>
+    </section>
+</main>
+
+<footer>
+    FoodShare — Share food, support people, reduce waste.
+</footer>
+
+<script>
+"use strict";
+
+/*
+ * These endpoint names must match the PHP files in your FoodShare folder.
+ */
+const APPROVED_REQUESTS_URL = "approved_fund_requests.php";
+const SUBMIT_DONATION_URL = "submit_manual_fund_donation.php";
+
+const requestsGrid = document.getElementById("requestsGrid");
+const globalMessage = document.getElementById("globalMessage");
+const paymentPanel = document.getElementById("paymentPanel");
+const paymentMessage = document.getElementById("paymentMessage");
+const paymentForm = document.getElementById("paymentForm");
+const submitPaymentButton = document.getElementById("submitPaymentButton");
+
+let selectedRequest = null;
+let approvedRequests = [];
+let submitting = false;
+
+function getUserId() {
+    const userId = localStorage.getItem("foodshareUserId");
+    const loggedIn = localStorage.getItem("foodshareLoggedIn");
+    const role = localStorage.getItem("foodshareUserRole");
+
+    if (
+        loggedIn !== "true" ||
+        !userId ||
+        !/^\d+$/.test(userId) ||
+        role !== "donor"
+    ) {
+        return null;
+    }
+
+    return userId;
+}
+
+function showMessage(element, message, type) {
+    element.textContent = message;
+    element.className = "notice " + type;
+    element.style.display = "block";
+}
+
+function clearMessage(element) {
+    element.textContent = "";
+    element.className = "notice";
+    element.style.display = "none";
+}
+
+function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, function(character) {
+        const replacements = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        };
+
+        return replacements[character];
+    });
+}
+
+function money(value) {
+    const number = Number(value);
+
+    return "₹" + (Number.isFinite(number) ? number : 0).toLocaleString(
+        "en-IN",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
+}
+
+function getRemainingAmount(request) {
+    const total = Number(request.amount) || 0;
+    const donated = Number(request.donated_amount) || 0;
+
+    return Math.max(0, total - donated);
+}
+
+function getReceiverName(request) {
+    return request.receiver_name ||
+           request.name ||
+           "Receiver";
+}
+
+function getReason(request) {
+    return request.reason ||
+           request.assistance_needed ||
+           request.details ||
+           "Financial assistance";
+}
+
+function getQRPath(request) {
+    return request.payment_qr ||
+           request.qr_code ||
+           request.qr_image ||
+           "";
+}
+
+function getRequestArray(response) {
+    // Supports an API returning a direct array.
+    if (Array.isArray(response)) {
+        return response;
+    }
+
+    // Supports common JSON response wrappers.
+    if (response && Array.isArray(response.data)) {
+        return response.data;
+    }
+
+    if (response && Array.isArray(response.requests)) {
+        return response.requests;
+    }
+
+    if (response && Array.isArray(response.fund_requests)) {
+        return response.fund_requests;
+    }
+
+    return null;
+}
+
+function renderRequests(requests) {
+    requestsGrid.replaceChildren();
+
+    if (!requests.length) {
+        requestsGrid.innerHTML =
+            '<div class="empty-state">' +
+            '<h3>No approved fund requests found</h3>' +
+            '<p>Approved requests will appear here when they are available.</p>' +
+            '</div>';
+        return;
+    }
+
+    requests.forEach(function(request) {
+        const remaining = getRemainingAmount(request);
+        const total = Number(request.amount) || 0;
+        const donated = Number(request.donated_amount) || 0;
+        const progress = total > 0
+            ? Math.min(100, Math.max(0, donated / total * 100))
+            : 0;
+
+        const card = document.createElement("article");
+        card.className = "request-card";
+
+        const heading = document.createElement("h2");
+        heading.textContent = getReceiverName(request);
+
+        const status = document.createElement("span");
+        status.className = "status";
+        status.textContent = "Approved";
+
+        const reason = document.createElement("p");
+        reason.className = "reason";
+        reason.textContent = getReason(request);
+
+        const amounts = document.createElement("div");
+        amounts.className = "amounts";
+
+        const totalRow = document.createElement("div");
+        totalRow.className = "amount-row";
+
+        const totalLabel = document.createElement("span");
+        totalLabel.textContent = "Requested";
+
+        const totalValue = document.createElement("strong");
+        totalValue.textContent = money(total);
+
+        totalRow.append(totalLabel, totalValue);
+
+        const donatedRow = document.createElement("div");
+        donatedRow.className = "amount-row";
+
+        const donatedLabel = document.createElement("span");
+        donatedLabel.textContent = "Donated so far";
+
+        const donatedValue = document.createElement("strong");
+        donatedValue.textContent = money(donated);
+
+        donatedRow.append(donatedLabel, donatedValue);
+
+        const remainingRow = document.createElement("div");
+        remainingRow.className = "amount-row";
+
+        const remainingLabel = document.createElement("span");
+        remainingLabel.textContent = "Still needed";
+
+        const remainingValue = document.createElement("strong");
+        remainingValue.textContent = money(remaining);
+
+        remainingRow.append(remainingLabel, remainingValue);
+
+        const track = document.createElement("div");
+        track.className = "progress-track";
+
+        const bar = document.createElement("div");
+        bar.className = "progress-bar";
+        bar.style.width = progress + "%";
+
+        track.appendChild(bar);
+        amounts.append(totalRow, donatedRow, remainingRow, track);
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "primary";
+        button.textContent = remaining > 0
+            ? "Donate to This Receiver"
+            : "Request Fully Funded";
+
+        button.disabled = remaining <= 0;
+
+        button.addEventListener("click", function() {
+            showPaymentForm(request);
+        });
+
+        card.append(heading, status, reason, amounts, button);
+        requestsGrid.appendChild(card);
+    });
+}
+
+async function loadApprovedRequests() {
+    clearMessage(globalMessage);
+
+    requestsGrid.innerHTML =
+        '<div class="empty-state">Loading approved fund requests...</div>';
+
+    try {
+        const response = await fetch(APPROVED_REQUESTS_URL, {
+            method: "GET",
+            cache: "no-store",
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        const rawText = await response.text();
+
+        let result;
+
+        try {
+            result = JSON.parse(rawText);
+        } catch {
+            throw new Error(
+                "The approved requests PHP file did not return valid JSON. " +
+                "Check approved_fund_requests.php."
+            );
+        }
+
+        if (!response.ok) {
+            throw new Error(
+                result.message || "Unable to load fund requests."
+            );
+        }
+
+        if (result && result.success === false) {
+            throw new Error(
+                result.message || "Unable to load fund requests."
+            );
+        }
+
+        const list = getRequestArray(result);
+
+        if (!list) {
+            throw new Error(
+                "Unexpected response format from approved_fund_requests.php."
+            );
+        }
+
+        // The PHP endpoint should return only approved requests.
+        approvedRequests = list.filter(function(request) {
+            const status = String(request.status || "")
+                .trim()
+                .toLowerCase();
+
+            return status === "approved" &&
+                   request.request_id != null;
+        });
+
+        renderRequests(approvedRequests);
+
+    } catch (error) {
+        requestsGrid.innerHTML =
+            '<div class="empty-state">' +
+            '<h3>Unable to load fund requests</h3>' +
+            '<p>' + escapeHTML(error.message) + '</p>' +
+            '<p>Check that the PHP file exists and the database connection works.</p>' +
+            '</div>';
+    }
+}
+
+function showPaymentForm(request) {
+    /*
+     * Read the same keys that signin.html saves.
+     * Do not rely on a different localStorage key such as "user_id".
+     */
+    const userId = getUserId();
+
+    if (!userId) {
+        showMessage(
+            globalMessage,
+            "Donor login information was not found. Please sign in again.",
+            "error"
+        );
+        return;
+    }
+
+    clearMessage(globalMessage);
+    clearMessage(paymentMessage);
+
+    selectedRequest = request;
+
+    document.getElementById("selectedReceiver").textContent =
+        getReceiverName(request);
+
+    document.getElementById("selectedReason").textContent =
+        getReason(request);
+
+    document.getElementById("selectedTotal").textContent =
+        money(request.amount);
+
+    document.getElementById("selectedDonated").textContent =
+        money(request.donated_amount);
+
+    document.getElementById("selectedRemaining").textContent =
+        money(getRemainingAmount(request));
+
+    const qrContent = document.getElementById("qrContent");
+    qrContent.replaceChildren();
+
+    const qrPath = getQRPath(request);
+
+    if (qrPath) {
+        const image = document.createElement("img");
+        image.src = qrPath;
+        image.alt = "Receiver UPI QR code";
+
+        image.addEventListener("error", function() {
+            qrContent.textContent =
+                "The QR image could not be loaded. Check the payment_qr " +
+                "path saved in the database.";
+        }, { once: true });
+
+        qrContent.appendChild(image);
+    } else {
+        const fallback = document.createElement("p");
+        fallback.className = "qr-fallback";
+        fallback.textContent =
+            "No UPI QR code has been uploaded for this request yet. " +
+            "Contact the administrator before making a payment.";
+
+        qrContent.appendChild(fallback);
+    }
+
+    paymentForm.reset();
+    paymentPanel.style.display = "block";
+
+    paymentPanel.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
+
+paymentForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    if (submitting) {
+        return;
+    }
+
+    const userId = getUserId();
+
+    if (!userId) {
+        showMessage(
+            paymentMessage,
+            "Your donor login could not be verified. Please sign in again.",
+            "error"
+        );
+        return;
+    }
+
+    if (!selectedRequest || !selectedRequest.request_id) {
+        showMessage(
+            paymentMessage,
+            "Please select an approved fund request first.",
+            "error"
+        );
+        return;
+    }
+
+    const transactionRef =
+        document.getElementById("transactionRef").value.trim();
+
+    if (!transactionRef) {
+        showMessage(
+            paymentMessage,
+            "Please enter your UPI transaction reference.",
+            "error"
+        );
+        return;
+    }
+
+    if (getRemainingAmount(selectedRequest) <= 0) {
+        showMessage(
+            paymentMessage,
+            "This request is already fully funded.",
+            "error"
+        );
+        return;
+    }
+
+    const confirmed = window.confirm(
+        "Have you completed the UPI payment and copied the actual " +
+        "transaction reference from your payment app?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    submitting = true;
+    submitPaymentButton.disabled = true;
+    submitPaymentButton.textContent = "Submitting...";
+
+    clearMessage(paymentMessage);
+
+    try {
+        const response = await fetch(SUBMIT_DONATION_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                user_id: Number(userId),
+                request_id: Number(selectedRequest.request_id),
+                transaction_ref: transactionRef
+            })
+        });
+
+        const rawText = await response.text();
+
+        let result;
+
+       try {
+    result = JSON.parse(rawText);
+} catch (error) {
+    console.error(
+        "submit_manual_fund_donation.php response:",
+        response.status,
+        rawText
+    );
+
+    throw new Error(
+        "PHP response (HTTP " + response.status + "): " +
+        rawText.substring(0, 1000)
+    );
+}
+
+        if (!response.ok || result.success !== true) {
+            throw new Error(
+                result.message || "Unable to submit the donation reference."
+            );
+        }
+
+        showMessage(
+            paymentMessage,
+            result.message ||
+            "Transaction reference submitted. Your donation is pending admin verification.",
+            "success"
+        );
+
+        document.getElementById("transactionRef").value = "";
+
+        /*
+         * Do not mark a payment as completed here.
+         * The admin must verify the actual payment.
+         */
+        await loadApprovedRequests();
+
+    } catch (error) {
+        showMessage(
+            paymentMessage,
+            error.message || "An unexpected error occurred.",
+            "error"
+        );
+    } finally {
+        submitting = false;
+        submitPaymentButton.disabled = false;
+        submitPaymentButton.textContent = "Submit for Verification";
+    }
+});
+
+document.getElementById("refreshButton").addEventListener(
+    "click",
+    loadApprovedRequests
+);
+
+/* Start the page. */
+loadApprovedRequests();
+</script>
+
+</body>
+</html>

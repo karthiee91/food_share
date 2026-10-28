@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>Sign In | FoodShare</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(
+        135deg,
+        #eefaf2,
+        #e2f6e9
+    );
+    color: #10251b;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+}
+
+.wrap {
+    width: min(440px, 100%);
+}
+
+.logo {
+    text-align: center;
+    font-size: 29px;
+    font-weight: 900;
+    color: #168653;
+    margin-bottom: 22px;
+}
+
+.logo span {
+    color: #ef9d31;
+}
+
+.box {
+    background: #fff;
+    border: 1px solid #dfeae3;
+    border-radius: 24px;
+    padding: 34px;
+    box-shadow: 0 20px 60px #17633a18;
+}
+
+.icon {
+    text-align: center;
+    font-size: 52px;
+}
+
+.box h1 {
+    text-align: center;
+    margin: 10px 0 8px;
+}
+
+.sub {
+    text-align: center;
+    color: #617168;
+    margin: 0 0 28px;
+    line-height: 1.5;
+}
+
+label {
+    display: block;
+    font-weight: 800;
+    font-size: 14px;
+    margin: 0 0 7px;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #d3e1d9;
+    border-radius: 11px;
+    font: inherit;
+    margin-bottom: 18px;
+}
+
+input:focus {
+    outline: 2px solid #bce5cb;
+    border-color: #168653;
+}
+
+.password-wrap {
+    position: relative;
+}
+
+.password-wrap input {
+    padding-right: 70px;
+}
+
+.show {
+    position: absolute;
+    right: 10px;
+    top: 9px;
+    border: 0;
+    background: #e1f4e8;
+    color: #168653;
+    border-radius: 8px;
+    padding: 7px 9px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: -5px 0 20px;
+    font-size: 14px;
+}
+
+.row label {
+    margin: 0;
+    font-weight: 600;
+}
+
+.row input {
+    width: auto;
+    margin: 0;
+    vertical-align: middle;
+}
+
+.link {
+    color: #168653;
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.btn {
+    width: 100%;
+    padding: 14px;
+    border: 0;
+    border-radius: 12px;
+    background: #168653;
+    color: #fff;
+    font: inherit;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.signup {
+    text-align: center;
+    color: #617168;
+    margin: 23px 0 0;
+}
+
+.error {
+    display: none;
+    background: #fff0f0;
+    color: #a33a3a;
+    padding: 11px;
+    border-radius: 9px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.back {
+    display: block;
+    text-align: center;
+    margin-top: 18px;
+    color: #617168;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+@media(max-width:480px) {
+
+    .box {
+        padding: 27px 21px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="wrap">
+
+    <div class="logo">
+        Food<span>Share</span> 🍲
+    </div>
+
+    <div class="box">
+
+        <div class="icon">
+            🔐
+        </div>
+
+        <h1>
+            Welcome Back
+        </h1>
+
+        <p class="sub">
+            Sign in to continue to FoodShare
+            and make an impact.
+        </p>
+
+        <div
+            id="error"
+            class="error">
+        </div>
+
+        <form id="loginForm">
+
+            <label for="login">
+                Email / Username
+            </label>
+
+            <input
+                id="login"
+                name="login"
+                type="text"
+                autocomplete="username"
+                placeholder="Enter your email or username"
+                required
+            >
+
+            <label for="password">
+                Password
+            </label>
+
+            <div class="password-wrap">
+
+                <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autocomplete="current-password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+                <button
+                    class="show"
+                    type="button"
+                    onclick="togglePassword()"
+                >
+                    Show
+                </button>
+
+            </div>
+
+            <div class="row">
+
+                <label>
+                    <input
+                        id="remember"
+                        type="checkbox"
+                    >
+                    Remember me
+                </label>
+
+                <a
+                    class="link"
+                    href="#"
+                    onclick="forgotPassword(event)"
+                >
+                    Forgot password?
+                </a>
+
+            </div>
+
+            <button
+                id="loginButton"
+                class="btn"
+                type="submit"
+            >
+                Sign In
+            </button>
+
+        </form>
+
+        <p class="signup">
+
+            Don't have an account?
+
+            <a
+                class="link"
+                href="signup.html"
+            >
+                Create Account
+            </a>
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const loginForm =
+    document.getElementById("loginForm");
+
+const loginButton =
+    document.getElementById("loginButton");
+
+
+function togglePassword() {
+
+    const password =
+        document.getElementById("password");
+
+    const button =
+        document.querySelector(".show");
+
+    if (password.type === "password") {
+
+        password.type = "text";
+        button.textContent = "Hide";
+
+    } else {
+
+        password.type = "password";
+        button.textContent = "Show";
+
+    }
+}
+
+
+function showError(message) {
+
+    const error =
+        document.getElementById("error");
+
+    error.textContent = message;
+
+    error.style.display = "block";
+}
+
+
+function forgotPassword(event) {
+
+    event.preventDefault();
+
+    alert(
+        "Password recovery is not connected yet."
+    );
+}
+
+
+loginForm.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+        document.getElementById("error")
+            .style.display = "none";
+
+
+        const login =
+            document
+                .getElementById("login")
+                .value
+                .trim();
+
+        const password =
+            document
+                .getElementById("password")
+                .value;
+
+        const remember =
+            document
+                .getElementById("remember")
+                .checked;
+
+
+        if (login === "" || password === "") {
+
+            showError(
+                "Please enter your email/username and password."
+            );
+
+            return;
+        }
+
+
+        const formData =
+            new FormData();
+
+        formData.append(
+            "login",
+            login
+        );
+
+        formData.append(
+            "password",
+            password
+        );
+
+
+        loginButton.disabled = true;
+
+        loginButton.textContent =
+            "Signing In...";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "signin.php",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (result.success) {
+
+                /*
+                 * Store basic client-side information.
+                 * Do NOT store password here.
+                 */
+
+                localStorage.setItem(
+                    "foodshareLoggedIn",
+                    "true"
+                );
+
+                localStorage.setItem(
+                    "foodshareCurrentUser",
+                    result.username
+                );
+
+                localStorage.setItem(
+                    "foodshareUserRole",
+                    result.role
+                );
+
+                localStorage.setItem(
+                    "foodshareUserId",
+                    result.user_id
+                );
+
+
+                if (remember) {
+
+                    localStorage.setItem(
+                        "foodshareRemember",
+                        "true"
+                    );
+
+                } else {
+
+                    localStorage.removeItem(
+                        "foodshareRemember"
+                    );
+
+                }
+
+
+                /*
+                 * Redirect according to role
+                 */
+
+                if (result.role === "donor") {
+
+                    window.location.href =
+                        "donor.html";
+
+                }
+
+                else if (
+                    result.role === "receiver"
+                ) {
+
+                    window.location.href =
+                        "receiver.html";
+
+                }
+
+                else if (
+                    result.role === "expert"
+                ) {
+
+                    window.location.href =
+                        "expert.html";
+
+                }
+
+                else {
+
+                    showError(
+                        "Invalid user role."
+                    );
+
+                }
+
+            } else {
+
+                showError(
+                    result.message
+                );
+
+            }
+
+        } catch (error) {
+
+            console.error(error);
+
+            showError(
+                "Unable to connect to the server."
+            );
+
+        } finally {
+
+            loginButton.disabled = false;
+
+            loginButton.textContent =
+                "Sign In";
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>

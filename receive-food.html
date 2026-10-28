@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Food | FoodShare</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eefaf2, #e2f6e9);
+            color: #333;
+        }
+
+        header {
+            background: #168653;
+            color: white;
+            padding: 18px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h2 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 22px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 65px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #168653;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            background: #168653;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #116c43;
+        }
+
+        .logout {
+            background: #ef9d31;
+            padding: 9px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>FoodShare</h2>
+    <button class="logout" onclick="logout()">Logout</button>
+</header>
+
+<div class="container">
+
+    <div class="card">
+
+        <div class="icon">🍲</div>
+
+        <h1>Request Food</h1>
+
+        <p>
+            Find food donations available near you.
+            You can view the food details, pickup time and the
+            exact location provided by the donor.
+        </p>
+
+        <a href="food-dashboard.html" class="btn">
+            View Available Food
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+    // Receiver login check
+    const loggedIn = localStorage.getItem("foodshareLoggedIn");
+    const role = localStorage.getItem("foodshareUserRole");
+
+    if (loggedIn !== "true" || role !== "receiver") {
+        window.location.replace("signin.html");
+    }
+
+    function logout() {
+        localStorage.removeItem("foodshareLoggedIn");
+        localStorage.removeItem("foodshareCurrentUser");
+        localStorage.removeItem("foodshareUserRole");
+        localStorage.removeItem("foodshareUserId");
+
+        window.location.replace("signin.html");
+    }
+</script>
+
+</body>
+</html>

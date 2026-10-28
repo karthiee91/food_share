@@ -1,0 +1,1425 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Available Food | FoodShare</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #eefaf2, #e2f6e9);
+    color: #333;
+}
+
+header {
+    background: #168653;
+    color: white;
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h2 {
+    margin: 0;
+}
+
+.logout {
+    background: #ef9d31;
+    border: none;
+    color: white;
+    padding: 9px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.logout:hover {
+    background: #d98720;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 35px auto;
+    padding: 20px;
+}
+
+.top-section {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+}
+
+.top-section h1 {
+    margin-top: 0;
+    color: #168653;
+}
+
+.top-section p {
+    color: #666;
+    line-height: 1.6;
+}
+
+.location-box {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+select,
+button {
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+
+select {
+    min-width: 280px;
+}
+
+.detect-btn {
+    background: #168653;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.detect-btn:hover {
+    background: #116c43;
+}
+
+.status {
+    margin-top: 12px;
+    color: #168653;
+    font-size: 14px;
+}
+
+.food-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+    gap: 22px;
+}
+
+.food-card {
+    background: white;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 7px 25px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease;
+}
+
+.food-card:hover {
+    transform: translateY(-3px);
+}
+
+.food-card h2 {
+    color: #168653;
+    margin-top: 0;
+}
+
+.food-info {
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+.food-info strong {
+    color: #444;
+}
+
+.location {
+    background: #eefaf2;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+    color: #168653;
+    line-height: 1.6;
+}
+
+.location-title {
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.location-address {
+    color: #333;
+    font-weight: normal;
+    word-break: break-word;
+}
+
+.navigate-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 11px 14px;
+    border: none;
+    border-radius: 8px;
+    background: #168653;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.navigate-btn:hover {
+    background: #116c43;
+}
+
+.navigate-btn:active {
+    transform: scale(0.98);
+}
+
+.claim-btn {
+    width: 100%;
+    margin-top: 18px;
+    padding: 13px;
+    border: none;
+    border-radius: 9px;
+    background: #ef9d31;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.claim-btn:hover {
+    background: #d98720;
+}
+
+.claim-btn:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+.empty {
+    background: white;
+    padding: 40px;
+    text-align: center;
+    border-radius: 18px;
+    color: #666;
+}
+
+.empty h3 {
+    color: #168653;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #168653;
+    font-weight: bold;
+}
+
+.error-box {
+    background: #fff;
+    padding: 30px;
+    text-align: center;
+    border-radius: 18px;
+    color: #c0392b;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+}
+
+@media(max-width:600px) {
+
+    header {
+        padding: 15px 20px;
+    }
+
+    .container {
+        padding: 12px;
+    }
+
+    select {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .detect-btn {
+        width: 100%;
+    }
+
+    .food-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <h2>FoodShare</h2>
+
+    <button
+        class="logout"
+        onclick="logout()">
+
+        Logout
+
+    </button>
+
+</header>
+
+
+<div class="container">
+
+    <div class="top-section">
+
+        <h1>🍲 Available Food</h1>
+
+        <p>
+            Food donated by people near you.
+            The pickup location shown here is the same location
+            provided by the donor.
+        </p>
+
+        <div class="location-box">
+
+            <select
+                id="locationFilter"
+                onchange="filterFood()">
+
+                <option value="all">
+                    Show All Available Food
+                </option>
+
+            </select>
+
+
+            <button
+                class="detect-btn"
+                onclick="detectLocation()">
+
+                📍 Detect My Location
+
+            </button>
+
+        </div>
+
+
+        <div
+            class="status"
+            id="locationStatus">
+        </div>
+
+    </div>
+
+
+    <div
+        id="foodContainer"
+        class="loading">
+
+        Loading available food...
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   LOGIN CHECK
+===================================================== */
+
+const loggedIn =
+    localStorage.getItem("foodshareLoggedIn");
+
+const role =
+    localStorage.getItem("foodshareUserRole");
+
+const receiverId =
+    localStorage.getItem("foodshareUserId");
+
+
+if (
+    loggedIn !== "true" ||
+    role !== "receiver"
+) {
+
+    window.location.replace("signin.html");
+
+}
+
+
+/* =====================================================
+   GLOBAL FOOD DATA
+===================================================== */
+
+let allFood = [];
+
+
+/* =====================================================
+   LOAD FOOD FROM MYSQL
+===================================================== */
+
+async function loadFood() {
+
+    const container =
+        document.getElementById("foodContainer");
+
+    container.className = "loading";
+
+    container.innerHTML =
+        "Loading available food...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "available_food.php?time=" +
+                Date.now()
+            );
+
+
+        const text =
+            await response.text();
+
+
+        console.log(
+            "available_food.php response:",
+            text
+        );
+
+
+        let result;
+
+
+        try {
+
+            result =
+                JSON.parse(text);
+
+        } catch (error) {
+
+            console.error(
+                "PHP response is not JSON:",
+                text
+            );
+
+            throw new Error(
+                "available_food.php did not return valid JSON."
+            );
+
+        }
+
+
+        if (!result.success) {
+
+            throw new Error(
+                result.message ||
+                "Unable to load food."
+            );
+
+        }
+
+
+        allFood =
+            Array.isArray(result.data)
+                ? result.data
+                : [];
+
+
+        console.log(
+            "Food loaded:",
+            allFood
+        );
+
+
+        createLocationOptions();
+
+        displayFood(allFood);
+
+
+    } catch (error) {
+
+        console.error(
+            "Load food error:",
+            error
+        );
+
+
+        container.className =
+            "error-box";
+
+
+        container.innerHTML = `
+
+            <h3>
+                Unable to load available food
+            </h3>
+
+            <p>
+                ${escapeHtml(error.message)}
+            </p>
+
+            <button
+                class="detect-btn"
+                onclick="loadFood()">
+
+                Try Again
+
+            </button>
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   CREATE LOCATION DROPDOWN
+===================================================== */
+
+function createLocationOptions() {
+
+    const select =
+        document.getElementById(
+            "locationFilter"
+        );
+
+
+    select.innerHTML = `
+
+        <option value="all">
+            Show All Available Food
+        </option>
+
+    `;
+
+
+    const locations = [];
+
+
+    allFood.forEach(food => {
+
+        const location =
+            food.location_name ||
+            food.pickup_location ||
+            food.locality ||
+            "";
+
+
+        if (
+            location &&
+            !locations.includes(location)
+        ) {
+
+            locations.push(location);
+
+        }
+
+    });
+
+
+    locations.sort();
+
+
+    locations.forEach(location => {
+
+        const option =
+            document.createElement("option");
+
+
+        option.value =
+            location;
+
+
+        option.textContent =
+            location;
+
+
+        select.appendChild(option);
+
+    });
+
+}
+
+
+/* =====================================================
+   DISPLAY FOOD
+===================================================== */
+
+function displayFood(foodList) {
+
+    const container =
+        document.getElementById(
+            "foodContainer"
+        );
+
+
+    if (
+        !foodList ||
+        foodList.length === 0
+    ) {
+
+        container.className =
+            "empty";
+
+
+        container.innerHTML = `
+
+            <h3>
+                No Available Food
+            </h3>
+
+            <p>
+                There are currently no food donations
+                available for pickup.
+            </p>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    container.className =
+        "food-grid";
+
+
+    container.innerHTML =
+
+        foodList.map(food => {
+
+            const location =
+                food.location_name ||
+                food.pickup_location ||
+                food.locality ||
+                "Location not provided";
+
+
+            const donationId =
+                Number(food.donation_id);
+
+
+            return `
+
+                <div class="food-card">
+
+
+                    <h2>
+
+                        ${escapeHtml(
+                            food.food_type ||
+                            "Food Donation"
+                        )}
+
+                    </h2>
+
+
+                    <div class="food-info">
+
+                        <strong>
+                            Donor:
+                        </strong>
+
+                        ${escapeHtml(
+                            food.donor_name ||
+                            "Not provided"
+                        )}
+
+                    </div>
+
+
+                    <div class="food-info">
+
+                        <strong>
+                            Quantity:
+                        </strong>
+
+                        ${escapeHtml(
+                            food.quantity ||
+                            "Not provided"
+                        )}
+
+                    </div>
+
+
+                    <div class="food-info">
+
+                        <strong>
+                            Pickup Time:
+                        </strong>
+
+                        ${formatDateTime(
+                            food.pickup_datetime
+                        )}
+
+                    </div>
+
+
+                    <div class="food-info">
+
+                        <strong>
+                            Expiry Time:
+                        </strong>
+
+                        ${formatDateTime(
+                            food.expiry_datetime
+                        )}
+
+                    </div>
+
+
+                    <div class="food-info">
+
+                        <strong>
+                            Details:
+                        </strong>
+
+                        ${escapeHtml(
+                            food.details ||
+                            "No additional details"
+                        )}
+
+                    </div>
+
+
+                    <!-- DONOR LOCATION -->
+
+                    <div class="location">
+
+                        <div class="location-title">
+
+                            📍 Donor Pickup Address
+
+                        </div>
+
+
+                        <div class="location-address">
+
+                            ${escapeHtml(location)}
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            class="navigate-btn"
+                            onclick='navigateToDonor(${JSON.stringify(location)})'>
+
+                            🗺️ Navigate to Donor
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- CLAIM FOOD -->
+
+                    <button
+                        type="button"
+                        class="claim-btn"
+                        onclick="claimFood(${donationId})">
+
+                        Claim Food
+
+                    </button>
+
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =====================================================
+   GOOGLE MAPS NAVIGATION
+===================================================== */
+
+function navigateToDonor(locationName) {
+
+    if (
+        !locationName ||
+        !locationName.trim()
+    ) {
+
+        alert(
+            "Donor address is not available."
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Convert the donor's address into a
+     * Google Maps destination.
+     */
+
+    const destination =
+        encodeURIComponent(
+            locationName.trim()
+        );
+
+
+    /*
+     * Google Maps Directions URL.
+     *
+     * No Google Maps API key is required.
+     *
+     * Google Maps can use the receiver's
+     * current location as the starting point.
+     */
+
+    const mapsUrl =
+        "https://www.google.com/maps/dir/?api=1" +
+        "&destination=" +
+        destination +
+        "&travelmode=driving" +
+        "&dir_action=navigate";
+
+
+    console.log(
+        "Opening Google Maps:",
+        mapsUrl
+    );
+
+
+    /*
+     * Open Google Maps in a new tab/window.
+     */
+
+    window.open(
+        mapsUrl,
+        "_blank"
+    );
+
+}
+
+
+/* =====================================================
+   FILTER FOOD
+===================================================== */
+
+function filterFood() {
+
+    const selected =
+        document.getElementById(
+            "locationFilter"
+        ).value;
+
+
+    if (
+        selected === "all"
+    ) {
+
+        displayFood(allFood);
+
+        return;
+
+    }
+
+
+    const filtered =
+        allFood.filter(food => {
+
+            const location =
+                food.location_name ||
+                food.pickup_location ||
+                food.locality ||
+                "";
+
+
+            return location === selected;
+
+        });
+
+
+    displayFood(filtered);
+
+}
+
+
+/* =====================================================
+   DETECT RECEIVER LOCATION
+===================================================== */
+
+function detectLocation() {
+
+    const status =
+        document.getElementById(
+            "locationStatus"
+        );
+
+
+    if (
+        !navigator.geolocation
+    ) {
+
+        status.textContent =
+            "Location is not supported by this browser.";
+
+        return;
+
+    }
+
+
+    status.textContent =
+        "Detecting your location...";
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        async function(position) {
+
+            const lat =
+                position.coords.latitude;
+
+
+            const lon =
+                position.coords.longitude;
+
+
+            try {
+
+                const response =
+                    await fetch(
+
+                        "https://nominatim.openstreetmap.org/reverse" +
+                        "?format=json" +
+                        "&lat=" +
+                        encodeURIComponent(lat) +
+                        "&lon=" +
+                        encodeURIComponent(lon) +
+                        "&zoom=10" +
+                        "&addressdetails=1",
+
+                        {
+                            headers: {
+                                "Accept":
+                                    "application/json"
+                            }
+                        }
+
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                const address =
+                    data.address || {};
+
+
+                const receiverLocation =
+                    address.city ||
+                    address.town ||
+                    address.municipality ||
+                    address.village ||
+                    address.county ||
+                    "";
+
+
+                if (
+                    !receiverLocation
+                ) {
+
+                    status.textContent =
+                        "Could not identify your locality.";
+
+                    return;
+
+                }
+
+
+                status.textContent =
+                    "Your location: " +
+                    receiverLocation;
+
+
+                filterByReceiverLocation(
+                    receiverLocation
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                status.textContent =
+                    "Unable to identify your location.";
+
+            }
+
+        },
+
+
+        function(error) {
+
+            console.error(error);
+
+
+            status.textContent =
+                "Please allow location access in your browser.";
+
+        }
+
+    );
+
+}
+
+
+/* =====================================================
+   MATCH RECEIVER LOCATION WITH DONOR LOCATION
+===================================================== */
+
+function filterByReceiverLocation(
+    receiverLocation
+) {
+
+    const receiver =
+        receiverLocation
+            .toLowerCase()
+            .trim();
+
+
+    const filtered =
+        allFood.filter(food => {
+
+            const location =
+                (
+                    food.location_name ||
+                    food.pickup_location ||
+                    food.locality ||
+                    ""
+                )
+                .toLowerCase()
+                .trim();
+
+
+            return (
+                location.includes(receiver) ||
+                receiver.includes(location)
+            );
+
+        });
+
+
+    if (
+        filtered.length === 0
+    ) {
+
+        document.getElementById(
+            "foodContainer"
+        ).className =
+            "empty";
+
+
+        document.getElementById(
+            "foodContainer"
+        ).innerHTML = `
+
+            <h3>
+
+                No food found in
+                ${escapeHtml(receiverLocation)}
+
+            </h3>
+
+
+            <p>
+
+                Try "Show All Available Food"
+                to see donations from other locations.
+
+            </p>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    displayFood(filtered);
+
+}
+
+
+/* =====================================================
+   CLAIM FOOD
+===================================================== */
+
+async function claimFood(donationId) {
+
+    const numericDonationId =
+        Number(donationId);
+
+
+    console.log(
+        "Donation ID received by claimFood():",
+        donationId
+    );
+
+
+    if (
+        !Number.isInteger(numericDonationId) ||
+        numericDonationId <= 0
+    ) {
+
+        alert(
+            "Invalid food donation ID."
+        );
+
+
+        console.error(
+            "Invalid donation ID:",
+            donationId
+        );
+
+
+        return;
+
+    }
+
+
+    const receiverName =
+        localStorage.getItem(
+            "foodshareCurrentUser"
+        ) || "Receiver";
+
+
+    const receiverPhone =
+        prompt(
+            "Enter your phone number so the donor can contact you:"
+        );
+
+
+    if (
+        !receiverPhone
+    ) {
+
+        return;
+
+    }
+
+
+    const cleanPhone =
+        receiverPhone.trim();
+
+
+    if (
+        !/^[6-9][0-9]{9}$/.test(
+            cleanPhone
+        )
+    ) {
+
+        alert(
+            "Please enter a valid 10-digit Indian mobile number."
+        );
+
+
+        return;
+
+    }
+
+
+    const message =
+        prompt(
+            "Optional message to donor:"
+        ) || "";
+
+
+    try {
+
+        /*
+         * Use FormData because claim_food.php
+         * reads values from $_POST.
+         */
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "donation_id",
+            String(numericDonationId)
+        );
+
+
+        formData.append(
+            "receiver_id",
+            String(receiverId || "")
+        );
+
+
+        formData.append(
+            "receiver_name",
+            receiverName
+        );
+
+
+        formData.append(
+            "receiver_phone",
+            cleanPhone
+        );
+
+
+        formData.append(
+            "message",
+            message.trim()
+        );
+
+
+        console.log(
+            "Sending food claim:",
+            {
+                donation_id:
+                    numericDonationId,
+
+                receiver_id:
+                    receiverId,
+
+                receiver_name:
+                    receiverName,
+
+                receiver_phone:
+                    cleanPhone,
+
+                message:
+                    message.trim()
+            }
+        );
+
+
+        const response =
+            await fetch(
+                "claim_food.php",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        const text =
+            await response.text();
+
+
+        console.log(
+            "claim_food.php response:",
+            text
+        );
+
+
+        let result;
+
+
+        try {
+
+            result =
+                JSON.parse(text);
+
+        } catch (jsonError) {
+
+            console.error(
+                "Invalid JSON returned by claim_food.php:",
+                text
+            );
+
+
+            throw new Error(
+                "claim_food.php returned an invalid response. Check the PHP file for an error."
+            );
+
+        }
+
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            alert(
+                result.message ||
+                "Unable to claim food."
+            );
+
+
+            return;
+
+        }
+
+
+        alert(
+
+            "Food claimed successfully!\n\n" +
+
+            "Donor: " +
+
+            (
+                result.donor_name ||
+                "Donor"
+            ) +
+
+            "\n\n" +
+
+            "Your claim has been sent to the donor."
+
+        );
+
+
+        await loadFood();
+
+
+    } catch (error) {
+
+        console.error(
+            "Claim food error:",
+            error
+        );
+
+
+        alert(
+            error.message ||
+            "Unable to connect to the server."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   DATE FORMAT
+===================================================== */
+
+function formatDateTime(value) {
+
+    if (!value) {
+
+        return "Not provided";
+
+    }
+
+
+    const date =
+        new Date(
+            String(value)
+                .replace(" ", "T")
+        );
+
+
+    if (
+        isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return value;
+
+    }
+
+
+    return date.toLocaleString();
+
+}
+
+
+/* =====================================================
+   HTML ESCAPE
+===================================================== */
+
+function escapeHtml(value) {
+
+    return String(
+        value ?? ""
+    )
+
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+
+    .replace(
+        /</g,
+        "&lt;"
+    )
+
+    .replace(
+        />/g,
+        "&gt;"
+    )
+
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout() {
+
+    localStorage.removeItem(
+        "foodshareLoggedIn"
+    );
+
+
+    localStorage.removeItem(
+        "foodshareCurrentUser"
+    );
+
+
+    localStorage.removeItem(
+        "foodshareUserRole"
+    );
+
+
+    localStorage.removeItem(
+        "foodshareUserId"
+    );
+
+
+    window.location.replace(
+        "signin.html"
+    );
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+loadFood();
+
+</script>
+
+</body>
+</html>
+

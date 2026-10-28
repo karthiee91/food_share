@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FoodShare - Receive Support</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  min-height:100vh;
+  background:linear-gradient(135deg,#f4fff8,#fffaf3);
+  color:#18352a;
+}
+nav{
+  position:sticky;top:0;z-index:10;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 7%;
+  background:#fff;
+  box-shadow:0 3px 15px rgba(0,0,0,.08);
+}
+.logo{font-size:25px;font-weight:800;color:#18864b}
+.logo span{color:#f28c28}
+.navlinks{display:flex;gap:18px;align-items:center}
+.navlinks a{
+  text-decoration:none;color:#315346;font-weight:700;
+  padding:9px 14px;border-radius:10px;
+}
+.navlinks a:hover{background:#eef9f2}
+.signout{color:#d95b35!important}
+.container{max-width:1050px;margin:auto;padding:55px 20px}
+.back{display:inline-block;text-decoration:none;color:#18864b;font-weight:700;margin-bottom:28px}
+h1{text-align:center;font-size:38px;margin-bottom:10px}
+.subtitle{text-align:center;color:#66776f;font-size:17px;margin-bottom:42px}
+.options{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:30px;max-width:900px;margin:0 auto;
+}
+.card{
+  position:relative;overflow:hidden;
+  min-height:360px;padding:38px 30px;
+  border-radius:25px;background:#fff;
+  box-shadow:0 10px 30px rgba(30,90,55,.12);
+  text-align:center;text-decoration:none;color:inherit;
+  transition:.25s ease;
+  border:2px solid transparent;
+}
+.card:hover{transform:translateY(-8px);border-color:#9bd8b5;box-shadow:0 18px 35px rgba(30,90,55,.18)}
+.icon{font-size:65px;margin:5px 0 18px}
+.card h2{font-size:28px;color:#18864b;margin-bottom:12px}
+.card.fund h2{color:#e4771d}
+.card p{font-size:16px;line-height:1.6;color:#64736d;max-width:360px;margin:auto}
+.button{
+  display:inline-block;margin-top:25px;padding:12px 25px;
+  border-radius:30px;background:#18864b;color:#fff;font-weight:800;
+}
+.fund .button{background:#e4771d}
+.quote{text-align:center;margin-top:42px;color:#6c7772;font-style:italic}
+@media(max-width:700px){
+  nav{padding:14px 5%}.navlinks a:not(.signout){display:none}
+  h1{font-size:30px}.options{grid-template-columns:1fr}
+  .card{min-height:320px}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Food<span>Share</span></div>
+  <div class="navlinks">
+    
+    <a class="signout" href="#" onclick="signOut()">Sign Out</a>
+  </div>
+</nav>
+
+<div class="container">
+ 
+  <h1>How would you like to receive?</h1>
+  <p class="subtitle">Choose the support you need. Every request helps connect people with care.</p>
+
+  <div class="options">
+    <a class="card" href="food-dashboard.html">
+      <div class="icon">🍱🤲</div>
+      <h2>Receive Food</h2>
+      <p>Request meals or food supplies for yourself, your family, or someone in need.</p>
+      <span class="button">Receive Food →</span>
+    </a>
+
+    <a class="card fund" href="receive-fund.html">
+      <div class="icon">💰❤️</div>
+      <h2>Receive Fund</h2>
+      <p>Request financial support for essential needs such as food, medical care, or emergencies.</p>
+      <span class="button">Request Fund →</span>
+    </a>
+  </div>
+
+  <p class="quote">“When we share what we have, everyone gets a little more hope.”</p>
+</div>
+
+<script>
+if(localStorage.getItem("foodshareLoggedIn") !== "true"){
+  window.location.href="signin.html";
+}
+function signOut(){
+  localStorage.removeItem("foodshareLoggedIn");
+  localStorage.removeItem("foodshareCurrentUser");
+  window.location.href="signin.html";
+}
+</script>
+</body>
+</html>

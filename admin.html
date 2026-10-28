@@ -1,0 +1,1363 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | FoodShare</title>
+
+    <style>
+        :root {
+            --green: #168653;
+            --green-dark: #116b42;
+            --green-light: #eaf7ef;
+            --orange: #ef9d31;
+            --red: #c62828;
+            --red-light: #fff0f0;
+            --yellow: #fff7df;
+            --text: #26352c;
+            --muted: #68736b;
+            --border: #dfe8e1;
+            --background: #f4f8f5;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--background);
+            color: var(--text);
+        }
+
+        header {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 18px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            font-size: 27px;
+            font-weight: 800;
+            color: var(--green);
+        }
+
+        .brand span {
+            color: var(--orange);
+        }
+
+        .header-subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .page-heading {
+            margin-bottom: 24px;
+        }
+
+        .page-heading h1 {
+            margin: 0 0 8px;
+            font-size: 30px;
+        }
+
+        .page-heading p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .summary-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(25, 70, 42, 0.04);
+        }
+
+        .summary-card .label {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .summary-card .number {
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--green);
+            overflow-wrap: anywhere;
+        }
+
+        .section {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 4px 15px rgba(25, 70, 42, 0.04);
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .section-heading h2 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .section-description {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.65;
+            margin: 0 0 20px;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button,
+        select {
+            font: inherit;
+        }
+
+        button {
+            border: 0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.88;
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.55;
+        }
+
+        .btn-refresh {
+            background: var(--green-light);
+            color: var(--green-dark);
+        }
+
+        .btn-approve {
+            background: var(--green);
+            color: white;
+        }
+
+        .btn-hold {
+            background: #fff0c9;
+            color: #765000;
+        }
+
+        .btn-reject,
+        .btn-delete {
+            background: var(--red-light);
+            color: var(--red);
+        }
+
+        select {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            padding: 10px;
+            color: var(--text);
+            max-width: 100%;
+        }
+
+        .request-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .request-card {
+            border: 1px solid var(--border);
+            border-left: 5px solid #b8c4bb;
+            border-radius: 12px;
+            padding: 20px;
+            min-width: 0;
+        }
+
+        .request-card.pending,
+        .request-card.pending_verification {
+            border-left-color: var(--orange);
+        }
+
+        .request-card.approved {
+            border-left-color: var(--green);
+        }
+
+        .request-card.hold,
+        .request-card.rejected {
+            border-left-color: var(--red);
+        }
+
+        .card-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .card-heading h3 {
+            margin: 0 0 6px;
+            font-size: 18px;
+            overflow-wrap: anywhere;
+        }
+
+        .request-id {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: capitalize;
+            background: #edf0ed;
+            color: #48554b;
+            overflow-wrap: anywhere;
+        }
+
+        .status.pending,
+        .status.pending_verification {
+            background: #fff0cf;
+            color: #815300;
+        }
+
+        .status.approved {
+            background: var(--green-light);
+            color: var(--green-dark);
+        }
+
+        .status.hold,
+        .status.rejected {
+            background: var(--red-light);
+            color: var(--red);
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .detail {
+            min-width: 0;
+        }
+
+        .detail.full {
+            grid-column: 1 / -1;
+        }
+
+        .detail .label {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .detail .value {
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        .amount {
+            color: var(--green-dark);
+            font-weight: 800;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .file-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .file-links a {
+            color: var(--green-dark);
+            font-weight: 700;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .file-links a:hover {
+            text-decoration: underline;
+        }
+
+        .state-box {
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+            padding: 28px 16px;
+            text-align: center;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .state-box.error {
+            background: var(--red-light);
+            border-color: #f2cccc;
+            color: var(--red);
+        }
+
+        .notice {
+            display: none;
+            padding: 13px 16px;
+            border-radius: 9px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .notice.success {
+            display: block;
+            color: var(--green-dark);
+            background: var(--green-light);
+        }
+
+        .notice.error {
+            display: block;
+            color: var(--red);
+            background: var(--red-light);
+        }
+
+        .notice.info {
+            display: block;
+            color: #765000;
+            background: var(--yellow);
+        }
+
+        .warning-note {
+            border: 1px solid #f1dfb0;
+            background: var(--yellow);
+            color: #765000;
+            border-radius: 9px;
+            padding: 13px 15px;
+            font-size: 13px;
+            line-height: 1.65;
+            margin-bottom: 18px;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            padding: 10px 20px 35px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 850px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 16px 20px;
+            }
+
+            .container {
+                margin: 20px auto;
+                padding: 0 12px;
+            }
+
+            .page-heading h1 {
+                font-size: 25px;
+            }
+
+            .section {
+                padding: 16px;
+            }
+
+            .summary-grid {
+                gap: 10px;
+            }
+
+            .summary-card {
+                padding: 15px;
+            }
+
+            .summary-card .number {
+                font-size: 24px;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+
+            .detail.full {
+                grid-column: auto;
+            }
+
+            .card-actions button {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div>
+        <div class="brand">Food<span>Share</span></div>
+        <div class="header-subtitle">Administration dashboard</div>
+    </div>
+
+    <button type="button" class="btn-refresh" id="refreshButton">
+        Refresh Dashboard
+    </button>
+</header>
+
+<main class="container">
+
+    <div class="page-heading">
+        <h1>Admin Dashboard</h1>
+        <p>Manage receiver applications and verify manual UPI donations.</p>
+    </div>
+
+    <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+    <section class="summary-grid" aria-label="Dashboard summary">
+        <div class="summary-card">
+            <div class="label">Receiver Applications</div>
+            <div class="number" id="totalRequests">—</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="label">Pending Applications</div>
+            <div class="number" id="pendingRequests">—</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="label">UPI Donations Pending</div>
+            <div class="number" id="pendingDonations">—</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="label">Verified UPI Amount</div>
+            <div class="number" id="verifiedAmount">—</div>
+        </div>
+    </section>
+
+    <!-- RECEIVER FUND APPLICATIONS -->
+
+    <section class="section">
+        <div class="section-heading">
+            <h2>Receiver Fund Applications</h2>
+
+            <div class="toolbar">
+                <select id="requestStatusFilter"
+                        aria-label="Filter receiver applications">
+                    <option value="all">All applications</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="hold">On hold</option>
+                    <option value="completed">Completed</option>
+                </select>
+
+                <button type="button"
+                        class="btn-refresh"
+                        id="refreshRequestsButton">
+                    Refresh Applications
+                </button>
+            </div>
+        </div>
+
+        <p class="section-description">
+            Review receiver details and supporting documents before approving
+            a fund application. Approved requests can be displayed to donors.
+        </p>
+
+        <div id="requestList" class="request-list">
+            <div class="state-box">Loading receiver applications...</div>
+        </div>
+    </section>
+
+    <!-- MANUAL UPI DONATIONS -->
+
+    <section class="section">
+        <div class="section-heading">
+            <h2>Manual UPI Donations</h2>
+
+            <div class="toolbar">
+                <select id="donationStatusFilter"
+                        aria-label="Filter UPI donations">
+                    <option value="all">All donation statuses</option>
+                    <option value="pending_verification">
+                        Pending verification
+                    </option>
+                    <option value="approved">Verified</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+
+                <button type="button"
+                        class="btn-refresh"
+                        id="refreshDonationsButton">
+                    Refresh Donations
+                </button>
+            </div>
+        </div>
+
+        <p class="section-description">
+            Review the donor's submitted amount, receiver request and UPI
+            transaction reference. Verify each payment before approving it.
+        </p>
+
+        <div class="warning-note">
+            <strong>Important:</strong> A UTR or transaction reference entered
+            by a donor is not proof that payment was received. Check your actual
+            bank or UPI transaction records before selecting
+            <strong>Verify &amp; Approve</strong>.
+        </div>
+
+        <div id="donationList" class="request-list">
+            <div class="state-box">Loading UPI donations...</div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    FoodShare Admin Dashboard<br>
+    Keep payment verification and receiver information secure.
+</footer>
+
+<script>
+"use strict";
+
+/*
+ * These PHP endpoints must exist in the same FoodShare folder:
+ *
+ * admin_requests.php
+ * update_fund_status.php
+ * delete_fund_request.php
+ * admin_donations.php
+ * verify_fund_donation.php
+ */
+
+const REQUESTS_ENDPOINT = "admin_requests.php";
+const UPDATE_REQUEST_ENDPOINT = "update_fund_status.php";
+const DELETE_REQUEST_ENDPOINT = "delete_fund_request.php";
+
+const DONATIONS_ENDPOINT = "admin_donations.php";
+const VERIFY_DONATION_ENDPOINT = "verify_fund_donation.php";
+
+const requestList = document.getElementById("requestList");
+const donationList = document.getElementById("donationList");
+
+const requestStatusFilter =
+    document.getElementById("requestStatusFilter");
+
+const donationStatusFilter =
+    document.getElementById("donationStatusFilter");
+
+let requestsData = [];
+let donationsData = [];
+let busy = false;
+let noticeTimer = null;
+
+
+/* ---------------- GENERAL HELPERS ---------------- */
+
+function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[character]);
+}
+
+
+function formatCurrency(value) {
+    const amount = Number(value);
+
+    if (!Number.isFinite(amount)) {
+        return "₹0.00";
+    }
+
+    return amount.toLocaleString("en-IN", {
+        style: "currency",
+        currency: "INR",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+
+function formatDate(value) {
+    if (!value) {
+        return "Not available";
+    }
+
+    /*
+     * Treat MySQL datetime strings as local date/time values
+     * rather than assuming they contain a UTC timezone.
+     */
+    const match = String(value).match(
+        /^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?)?$/
+    );
+
+    let date;
+
+    if (match) {
+        date = new Date(
+            Number(match[1]),
+            Number(match[2]) - 1,
+            Number(match[3]),
+            Number(match[4] || 0),
+            Number(match[5] || 0),
+            Number(match[6] || 0)
+        );
+    } else {
+        date = new Date(value);
+    }
+
+    if (Number.isNaN(date.getTime())) {
+        return String(value);
+    }
+
+    return date.toLocaleString("en-IN");
+}
+
+
+function normalizeStatus(value) {
+    return String(value || "unknown")
+        .trim()
+        .toLowerCase();
+}
+
+
+function statusClass(value) {
+    const status = normalizeStatus(value);
+
+    if (status === "pending" ||
+        status === "pending_verification") {
+        return status;
+    }
+
+    if (status === "approved" ||
+        status === "completed") {
+        return "approved";
+    }
+
+    if (status === "hold" ||
+        status === "rejected") {
+        return status;
+    }
+
+    return "";
+}
+
+
+function showNotice(message, type = "info") {
+    const notice = document.getElementById("notice");
+
+    notice.textContent = message;
+    notice.className = "notice " + type;
+
+    if (noticeTimer) {
+        clearTimeout(noticeTimer);
+    }
+
+    noticeTimer = setTimeout(() => {
+        notice.className = "notice";
+        notice.textContent = "";
+    }, 6000);
+}
+
+
+async function readJson(response) {
+    const text = await response.text();
+
+    let result;
+
+    try {
+        result = JSON.parse(text);
+    } catch {
+        throw new Error(
+            "The server did not return valid JSON. Check the PHP file for errors."
+        );
+    }
+
+    if (!response.ok) {
+        throw new Error(
+            result.message ||
+            "The server returned HTTP " + response.status + "."
+        );
+    }
+
+    return result;
+}
+
+
+async function fetchJson(url, options = {}) {
+    const response = await fetch(url, {
+        cache: "no-store",
+        credentials: "same-origin",
+        ...options,
+        headers: {
+            "Accept": "application/json",
+            ...(options.headers || {})
+        }
+    });
+
+    const result = await readJson(response);
+
+    if (result.success !== true) {
+        throw new Error(result.message || "The operation failed.");
+    }
+
+    return result;
+}
+
+
+function safeFileLink(path, label) {
+    if (!path) {
+        return "";
+    }
+
+    const raw = String(path).trim();
+
+    /*
+     * Only allow relative paths or same-origin absolute URLs.
+     * Never render an arbitrary javascript: URL.
+     */
+    if (/^(javascript|data|vbscript):/i.test(raw)) {
+        return "";
+    }
+
+    let url;
+
+    try {
+        url = new URL(raw, window.location.href);
+    } catch {
+        return "";
+    }
+
+    if (url.origin !== window.location.origin) {
+        return "";
+    }
+
+    return `<a href="${escapeHtml(url.href)}"
+               target="_blank"
+               rel="noopener noreferrer">${escapeHtml(label)}</a>`;
+}
+
+
+function updateSummary() {
+    document.getElementById("totalRequests").textContent =
+        requestsData.length;
+
+    document.getElementById("pendingRequests").textContent =
+        requestsData.filter(item =>
+            normalizeStatus(item.status) === "pending"
+        ).length;
+
+    document.getElementById("pendingDonations").textContent =
+        donationsData.filter(item =>
+            normalizeStatus(item.payment_status) === "pending_verification"
+        ).length;
+
+    const verifiedTotal = donationsData
+        .filter(item =>
+            normalizeStatus(item.payment_status) === "approved"
+        )
+        .reduce((sum, item) => {
+            const amount = Number(item.amount);
+            return sum + (Number.isFinite(amount) ? amount : 0);
+        }, 0);
+
+    document.getElementById("verifiedAmount").textContent =
+        formatCurrency(verifiedTotal);
+}
+
+
+/* ---------------- RECEIVER APPLICATIONS ---------------- */
+
+async function loadRequests() {
+    requestList.innerHTML =
+        '<div class="state-box">Loading receiver applications...</div>';
+
+    try {
+        const result = await fetchJson(REQUESTS_ENDPOINT);
+
+        if (!Array.isArray(result.data)) {
+            throw new Error(
+                "admin_requests.php must return a data array."
+            );
+        }
+
+        requestsData = result.data;
+        renderRequests();
+        updateSummary();
+
+    } catch (error) {
+        console.error("Receiver applications error:", error);
+
+        requestList.innerHTML =
+            `<div class="state-box error">${escapeHtml(error.message)}</div>`;
+    }
+}
+
+
+function renderRequests() {
+    const selected = requestStatusFilter.value;
+
+    const filtered = requestsData.filter(item => {
+        const status = normalizeStatus(item.status);
+
+        return selected === "all" || status === selected;
+    });
+
+    if (!filtered.length) {
+        requestList.innerHTML =
+            '<div class="state-box">No receiver applications match this filter.</div>';
+        return;
+    }
+
+    requestList.innerHTML = filtered.map(item => {
+        const id = Number(item.request_id);
+        const status = normalizeStatus(item.status);
+        const cssStatus = statusClass(status);
+
+        const receiverName =
+            item.receiver_name || item.name || "Unnamed receiver";
+
+        const reason =
+            item.reason || item.assistance_needed || "Not provided";
+
+        const details =
+            item.details || "No additional description provided.";
+
+        const age =
+            item.age === null || item.age === undefined || item.age === ""
+                ? "Not provided"
+                : String(item.age);
+
+        const phone = item.phone || "Not provided";
+
+        const amount = formatCurrency(item.amount);
+
+        const donated = formatCurrency(item.donated_amount || 0);
+
+        const medicalLink = safeFileLink(
+            item.medical_certificate,
+            "View medical certificate"
+        );
+
+        const qrLink = safeFileLink(
+            item.payment_qr,
+            "View payment QR"
+        );
+
+        const canManage =
+            Number.isSafeInteger(id) && id > 0;
+
+        return `
+            <article class="request-card ${escapeHtml(cssStatus)}">
+                <div class="card-heading">
+                    <div>
+                        <h3>${escapeHtml(receiverName)}</h3>
+                        <div class="request-id">
+                            Application #${escapeHtml(String(item.request_id ?? ""))}
+                            · Submitted ${escapeHtml(formatDate(item.created_at))}
+                        </div>
+                    </div>
+
+                    <span class="status ${escapeHtml(cssStatus)}">
+                        ${escapeHtml(status.replace(/_/g, " "))}
+                    </span>
+                </div>
+
+                <div class="details">
+                    <div class="detail">
+                        <div class="label">Age</div>
+                        <div class="value">${escapeHtml(age)}</div>
+                    </div>
+
+                    <div class="detail">
+                        <div class="label">Phone</div>
+                        <div class="value">${escapeHtml(phone)}</div>
+                    </div>
+
+                    <div class="detail">
+                        <div class="label">Requested amount</div>
+                        <div class="value amount">${escapeHtml(amount)}</div>
+                    </div>
+
+                    <div class="detail">
+                        <div class="label">Verified donations total</div>
+                        <div class="value amount">${escapeHtml(donated)}</div>
+                    </div>
+
+                    <div class="detail full">
+                        <div class="label">Assistance needed</div>
+                        <div class="value">${escapeHtml(reason)}</div>
+                    </div>
+
+                    <div class="detail full">
+                        <div class="label">Description</div>
+                        <div class="value">${escapeHtml(details)}</div>
+                    </div>
+
+                    <div class="detail">
+                        <div class="label">User ID</div>
+                        <div class="value">${escapeHtml(String(item.user_id ?? "Not available"))}</div>
+                    </div>
+
+                    <div class="detail">
+                        <div class="label">Created at</div>
+                        <div class="value">${escapeHtml(formatDate(item.created_at))}</div>
+                    </div>
+                </div>
+
+                ${(medicalLink || qrLink) ? `
+                    <div class="file-links">
+                        ${medicalLink}
+                        ${qrLink}
+                    </div>
+                ` : ""}
+
+                ${canManage ? `
+                    <div class="card-actions">
+                        <button type="button"
+                                class="btn-approve"
+                                data-request-action="approved"
+                                data-request-id="${id}">
+                            Approve
+                        </button>
+
+                        <button type="button"
+                                class="btn-hold"
+                                data-request-action="hold"
+                                data-request-id="${id}">
+                            Hold
+                        </button>
+
+                        <button type="button"
+                                class="btn-delete"
+                                data-request-action="delete"
+                                data-request-id="${id}">
+                            Delete
+                        </button>
+                    </div>
+                ` : ""}
+            </article>
+        `;
+    }).join("");
+}
+
+
+async function updateRequest(id, status) {
+    const formData = new FormData();
+
+    formData.append("request_id", String(id));
+    formData.append("status", status);
+
+    await fetchJson(UPDATE_REQUEST_ENDPOINT, {
+        method: "POST",
+        body: formData
+    });
+}
+
+
+async function deleteRequest(id) {
+    const formData = new FormData();
+
+    formData.append("request_id", String(id));
+
+    await fetchJson(DELETE_REQUEST_ENDPOINT, {
+        method: "POST",
+        body: formData
+    });
+}
+
+
+requestList.addEventListener("click", async event => {
+    const button = event.target.closest("button[data-request-action]");
+
+    if (!button || busy) {
+        return;
+    }
+
+    const id = Number(button.dataset.requestId);
+    const action = button.dataset.requestAction;
+
+    if (!Number.isSafeInteger(id) || id < 1) {
+        showNotice("Invalid receiver application ID.", "error");
+        return;
+    }
+
+    if (action === "delete") {
+        const confirmed = confirm(
+            "Delete this receiver application? This may be refused if donations are linked to it."
+        );
+
+        if (!confirmed) {
+            return;
+        }
+    } else {
+        const confirmed = confirm(
+            action === "approved"
+                ? "Approve this receiver application?"
+                : "Place this receiver application on hold?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+    }
+
+    busy = true;
+    button.disabled = true;
+
+    try {
+        if (action === "delete") {
+            await deleteRequest(id);
+            showNotice("Receiver application deleted.", "success");
+        } else {
+            await updateRequest(id, action);
+
+            showNotice(
+                action === "approved"
+                    ? "Receiver application approved."
+                    : "Receiver application placed on hold.",
+                "success"
+            );
+        }
+
+        await loadRequests();
+
+    } catch (error) {
+        console.error("Receiver application update error:", error);
+        showNotice(error.message, "error");
+    } finally {
+        busy = false;
+        button.disabled = false;
+    }
+});
+
+
+requestStatusFilter.addEventListener("change", renderRequests);
+
+
+/* ---------------- MANUAL UPI DONATIONS ---------------- */
+
+async function loadDonations() {
+    donationList.innerHTML =
+        '<div class="state-box">Loading UPI donations...</div>';
+
+    try {
+        const result = await fetchJson(DONATIONS_ENDPOINT);
+
+        if (!Array.isArray(result.data)) {
+            throw new Error(
+                "admin_donations.php must return a data array."
+            );
+        }
+
+        donationsData = result.data;
+        renderDonations();
+        updateSummary();
+
+    } catch (error) {
+        console.error("UPI donations error:", error);
+
+        donationList.innerHTML =
+            `<div class="state-box error">${escapeHtml(error.message)}</div>`;
+    }
+}
+
+
+function renderDonations() {
+    const selected = donationStatusFilter.value;
+
+    const filtered = donationsData.filter(item => {
+        const status = normalizeStatus(item.payment_status);
+
+        return selected === "all" || status === selected;
+    });
+
+    if (!filtered.length) {
+        donationList.innerHTML =
+            '<div class="state-box">No UPI donations match this filter.</div>';
+        return;
+    }
+
+    donationList.innerHTML = filtered.map(item => {
+        const id = Number(item.donation_id);
+        const status = normalizeStatus(item.payment_status);
+        const cssStatus = statusClass(status);
+
+        const isPending = status === "pending_verification";
+
+        const amount = formatCurrency(item.amount);
+
+        const receiverName =
+            item.receiver_name || "Not available";
+
+        const receiverPhone =
+            item.phone || "Not available";
+
+        const transactionRef =
+            item.transaction_ref || "Not provided";
+
+        const paymentMethod =
+            item.payment_method || "UPI";
+
+        const createdAt =
+            item.created_at || item.donation_created_at;
+
+        const validId =
+            Number.isSafeInteger(id) && id > 0;
+
+        return `
+            <article class="request-card ${escapeHtml(cssStatus)}">
+                <div class="card-heading">
+                    <div>
+                        <h3>UPI Donation #${escapeHtml(String(item.donation_id ?? ""))}</h3>
+                        <div class="request-id">
+                            Receiver request #${escapeHtml(String(item.request_id ?? "Not linked"))}
+                        </div>
+                    </div>
+
+                    <span class="status ${escapeHtml(cssStatus)}">
+                        ${escapeHtml(status.replace(/_/g, " "))}
+                    </span>
+                </div>
+
+                <div class="details">
+                    <div class="detail">
+                        <div class="label">Donation amount</div>
+                        <div class="value amount">${escapeHtml(amount)}</div>
+                    </div>
+
+                    <div class="detail">
+                        <div class="label">Donor user ID</div>
+                        <div class="value">${escapeHtml(String(item.user_id ?? "Not available"))}</div>
+                    </div>
+
+                    <div class="detail">
+                        <div class="label">Receiver</div>
+                        <div class="value">${escapeHtml(receiverName)}</div>
+                    </div>
+
+                    <div class="detail">
+                        <div class="label">Receiver phone</div>
+                        <div class="value">${escapeHtml(receiverPhone)}</div>
+                    </div>
+
+                    <div class="detail">
+                        <div class="label">Payment method</div>
+                        <div class="value">${escapeHtml(paymentMethod)}</div>
+                    </div>
+
+                    <div class="detail">
+                        <div class="label">Submitted at</div>
+                        <div class="value">${escapeHtml(formatDate(createdAt))}</div>
+                    </div>
+
+                    <div class="detail full">
+                        <div class="label">Transaction reference / UTR</div>
+                        <div class="value">${escapeHtml(transactionRef)}</div>
+                    </div>
+                </div>
+
+                ${isPending && validId ? `
+                    <div class="card-actions">
+                        <button type="button"
+                                class="btn-approve"
+                                data-donation-action="approve"
+                                data-donation-id="${id}">
+                            Verify &amp; Approve
+                        </button>
+
+                        <button type="button"
+                                class="btn-hold"
+                                data-donation-action="hold"
+                                data-donation-id="${id}">
+                            Keep Pending
+                        </button>
+
+                        <button type="button"
+                                class="btn-reject"
+                                data-donation-action="reject"
+                                data-donation-id="${id}">
+                            Reject
+                        </button>
+                    </div>
+                ` : ""}
+            </article>
+        `;
+    }).join("");
+}
+
+
+async function verifyDonation(id, action) {
+    const formData = new FormData();
+
+    formData.append("donation_id", String(id));
+    formData.append("action", action);
+
+    return fetchJson(VERIFY_DONATION_ENDPOINT, {
+        method: "POST",
+        body: formData
+    });
+}
+
+
+donationList.addEventListener("click", async event => {
+    const button = event.target.closest("button[data-donation-action]");
+
+    if (!button || busy) {
+        return;
+    }
+
+    const id = Number(button.dataset.donationId);
+    const action = button.dataset.donationAction;
+
+    if (!Number.isSafeInteger(id) || id < 1) {
+        showNotice("Invalid donation ID.", "error");
+        return;
+    }
+
+    let confirmation;
+
+    if (action === "approve") {
+        confirmation =
+            "Have you confirmed this payment in your bank or UPI records? Approving it will increase the receiver's verified donated total.";
+    } else if (action === "reject") {
+        confirmation =
+            "Reject this donation? Its amount must not be added to the receiver's donated total.";
+    } else {
+        confirmation =
+            "Keep this donation pending verification? Its amount will not be added to the receiver's donated total.";
+    }
+
+    if (!confirm(confirmation)) {
+        return;
+    }
+
+    busy = true;
+    button.disabled = true;
+
+    try {
+        const result = await verifyDonation(id, action);
+
+        showNotice(
+            result.message || "Donation status updated.",
+            "success"
+        );
+
+        /*
+         * Refresh both sections because approving a donation
+         * may change the receiver application's donated total
+         * or status.
+         */
+        await Promise.all([
+            loadDonations(),
+            loadRequests()
+        ]);
+
+    } catch (error) {
+        console.error("UPI donation verification error:", error);
+        showNotice(error.message, "error");
+    } finally {
+        busy = false;
+        button.disabled = false;
+    }
+});
+
+
+donationStatusFilter.addEventListener("change", renderDonations);
+
+
+/* ---------------- REFRESH BUTTONS ---------------- */
+
+document.getElementById("refreshButton").addEventListener("click", async () => {
+    await refreshDashboard();
+});
+
+
+document.getElementById("refreshRequestsButton").addEventListener(
+    "click",
+    loadRequests
+);
+
+
+document.getElementById("refreshDonationsButton").addEventListener(
+    "click",
+    loadDonations
+);
+
+
+async function refreshDashboard() {
+    await Promise.all([
+        loadRequests(),
+        loadDonations()
+    ]);
+}
+
+
+/* ---------------- INITIAL LOAD ---------------- */
+
+refreshDashboard();
+
+</script>
+
+</body>
+</html>

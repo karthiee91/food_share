@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Create Account | FoodShare</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #eefaf2, #e2f6e9);
+    color: #10251b;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+}
+
+.wrap {
+    width: min(440px, 100%);
+}
+
+.logo {
+    text-align: center;
+    font-size: 29px;
+    font-weight: 900;
+    color: #168653;
+    margin-bottom: 22px;
+}
+
+.logo span {
+    color: #ef9d31;
+}
+
+.box {
+    background: #fff;
+    border: 1px solid #dfeae3;
+    border-radius: 24px;
+    padding: 34px;
+    box-shadow: 0 20px 60px #17633a18;
+}
+
+.icon {
+    text-align: center;
+    font-size: 52px;
+}
+
+.box h1 {
+    text-align: center;
+    margin: 10px 0 8px;
+}
+
+.sub {
+    text-align: center;
+    color: #617168;
+    margin: 0 0 28px;
+    line-height: 1.5;
+}
+
+label {
+    display: block;
+    font-weight: 800;
+    font-size: 14px;
+    margin: 0 0 7px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #d3e1d9;
+    border-radius: 11px;
+    font: inherit;
+    margin-bottom: 17px;
+    background: #fff;
+}
+
+input:focus,
+select:focus {
+    outline: 2px solid #bce5cb;
+    border-color: #168653;
+}
+
+.btn {
+    width: 100%;
+    padding: 14px;
+    border: 0;
+    border-radius: 12px;
+    background: #168653;
+    color: #fff;
+    font: inherit;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.error {
+    display: none;
+    background: #fff0f0;
+    color: #a33a3a;
+    padding: 11px;
+    border-radius: 9px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.success {
+    display: none;
+    background: #e9fff1;
+    color: #167944;
+    padding: 11px;
+    border-radius: 9px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.login {
+    text-align: center;
+    color: #617168;
+    margin: 23px 0 0;
+}
+
+.link {
+    color: #168653;
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.back {
+    display: block;
+    text-align: center;
+    margin-top: 18px;
+    color: #617168;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+@media(max-width:480px) {
+    .box {
+        padding: 27px 21px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+    <div class="logo">
+        Food<span>Share</span> 🍲
+    </div>
+
+    <div class="box">
+
+        <div class="icon">🤝</div>
+
+        <h1>Create Account</h1>
+
+        <p class="sub">
+            Join FoodShare and help reduce food waste.
+        </p>
+
+        <div id="error" class="error"></div>
+        <div id="success" class="success"></div>
+
+        <form id="signupForm">
+
+            <label for="username">
+                Full Name / Username
+            </label>
+
+            <input
+                id="username"
+                name="username"
+                type="text"
+                placeholder="Enter your name or username"
+                autocomplete="name"
+                required
+            >
+
+            <label for="email">
+                Email
+            </label>
+
+            <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                autocomplete="email"
+                required
+            >
+
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Create a password"
+                minlength="6"
+                autocomplete="new-password"
+                required
+            >
+
+            <label for="confirm">
+                Confirm Password
+            </label>
+
+            <input
+                id="confirm"
+                type="password"
+                placeholder="Re-enter your password"
+                minlength="6"
+                autocomplete="new-password"
+                required
+            >
+
+            <label for="role">
+                Choose Your Role
+            </label>
+
+            <select id="role" name="role" required>
+
+                <option value="">
+                    Select Donor, Receiver or Expert
+                </option>
+
+                <option value="donor">
+                    Donor
+                </option>
+
+                <option value="receiver">
+                    Receiver
+                </option>
+
+                <option value="expert">
+                    Expert
+                </option>
+
+            </select>
+
+            <button
+                id="signupButton"
+                class="btn"
+                type="submit"
+            >
+                Create Account
+            </button>
+
+        </form>
+
+        <p class="login">
+            Already have an account?
+            <a class="link" href="signin.html">
+                Sign In
+            </a>
+        </p>
+
+    </div>
+
+    <a class="back" href="signin.html">
+        ← Back to Sign In
+    </a>
+
+</div>
+
+<script>
+
+const signupForm = document.getElementById("signupForm");
+const signupButton = document.getElementById("signupButton");
+
+function showError(message) {
+
+    const error = document.getElementById("error");
+    const success = document.getElementById("success");
+
+    success.style.display = "none";
+
+    error.textContent = message;
+    error.style.display = "block";
+}
+
+function showSuccess(message) {
+
+    const error = document.getElementById("error");
+    const success = document.getElementById("success");
+
+    error.style.display = "none";
+
+    success.textContent = message;
+    success.style.display = "block";
+}
+
+signupForm.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    document.getElementById("error").style.display = "none";
+
+    const username =
+        document.getElementById("username").value.trim();
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    const confirm =
+        document.getElementById("confirm").value;
+
+    const role =
+        document.getElementById("role").value;
+
+    if (username === "") {
+        showError("Please enter your name or username.");
+        return;
+    }
+
+    if (email === "") {
+        showError("Please enter your email.");
+        return;
+    }
+
+    if (password.length < 6) {
+        showError("Password must contain at least 6 characters.");
+        return;
+    }
+
+    if (password !== confirm) {
+        showError("Passwords do not match.");
+        return;
+    }
+
+    if (role === "") {
+        showError("Please select your role.");
+        return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("username", username);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("role", role);
+
+    signupButton.disabled = true;
+    signupButton.textContent = "Creating Account...";
+
+    try {
+
+        const response = await fetch("signup.php", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+
+            showSuccess(
+                "Account created successfully. Redirecting to sign in..."
+            );
+
+            setTimeout(function() {
+
+                window.location.href = "signin.html";
+
+            }, 1000);
+
+        } else {
+
+            showError(result.message);
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        showError(
+            "Unable to connect to the server."
+        );
+
+    } finally {
+
+        signupButton.disabled = false;
+        signupButton.textContent = "Create Account";
+    }
+
+});
+
+</script>
+
+</body>
+</html>

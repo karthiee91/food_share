@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Choose Your Purpose | FoodShare</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#eefaf2,#fdf9ef);color:#10251b;min-height:100vh}
+nav{height:72px;background:#fff;border-bottom:1px solid #dfeae3;display:flex;align-items:center;justify-content:space-between;padding:0 7%}.logo{font-size:25px;font-weight:900;color:#168653}.logo span{color:#ef9d31}nav a{color:#29483a;text-decoration:none;font-weight:700}
+.hero{text-align:center;padding:55px 6% 25px}.tag{display:inline-block;background:#e1f4e8;color:#168653;padding:8px 15px;border-radius:30px;font-weight:800;font-size:13px}.hero h1{font-size:clamp(34px,6vw,56px);margin:18px 0 10px}.hero p{color:#617168;font-size:18px;line-height:1.6;margin:auto;max-width:650px}
+.choices{max-width:1050px;margin:35px auto 65px;padding:0 25px;display:grid;grid-template-columns:1fr 1fr;gap:28px}.choice{background:#fff;border:1px solid #dfeae3;border-radius:28px;overflow:hidden;box-shadow:0 18px 55px #17633a16;transition:.25s;text-decoration:none;color:inherit}.choice:hover{transform:translateY(-7px);box-shadow:0 25px 65px #17633a22}.pic{height:250px;display:flex;align-items:center;justify-content:center;font-size:105px;position:relative}.donate-pic{background:linear-gradient(135deg,#e8f8ed,#fff3dc)}.receive-pic{background:linear-gradient(135deg,#e8f1ff,#e8f8ed)}.pic:after{content:"";position:absolute;inset:18px;border:1px solid #ffffffaa;border-radius:20px}.content{padding:28px 30px 30px}.content h2{font-size:29px;margin:0 0 10px}.content p{color:#617168;line-height:1.6;margin:0 0 20px}.quote{font-style:italic;color:#168653;font-weight:700;margin-bottom:22px}.btn{display:inline-block;padding:14px 21px;border-radius:12px;font-weight:900}.donate-btn{background:#168653;color:#fff}.receive-btn{background:#e1f4e8;color:#168653}
+.note{text-align:center;color:#6b7b72;font-size:14px;padding-bottom:35px}footer{padding:30px 7%;background:#0c1d14;color:#c3d0c9;display:flex;justify-content:space-between;flex-wrap:wrap}
+@media(max-width:720px){.choices{grid-template-columns:1fr;padding:0 18px}.pic{height:210px;font-size:85px}.hero{padding-top:40px}nav{padding:0 5%}}
+</style>
+</head>
+<body>
+<script>if(localStorage.getItem('foodshareLoggedIn')!=='true'){window.location.replace('signin.html');}</script>
+<nav><div class="logo">Food<span>Share</span> 🍲</div><div><a href="choose.html">Home</a>&nbsp;&nbsp;&nbsp;<a href="#" onclick="logout(event)">Sign Out</a></div></nav>
+<section class="hero"><div class="tag">ONE COMMUNITY • TWO WAYS TO HELP</div><h1>How would you like to help?</h1><p>Whether you have something to give or need a helping hand, FoodShare brings people together with dignity, kindness and care.</p></section>
+<div class="choices">
+<a class="choice" href="donor.html"><div class="pic donate-pic">🍱🤲❤️</div><div class="content"><h2>Donate</h2><p>Share surplus food or support someone in need. Your small contribution can become someone's reason to smile.</p><div class="quote">“No one has ever become poor by giving.”</div><span class="btn donate-btn">💚 I Want to Donate →</span></div></a>
+<a class="choice" href="receiver.html"><div class="pic receive-pic">🤝🍲😊</div><div class="content"><h2>Receive</h2><p>Need food or support? Reach out through FoodShare and connect with available help in your community.</p><div class="quote">“Asking for help is a sign of strength, not weakness.”</div><span class="btn receive-btn">🤝 I Need Support →</span></div></a>
+</div>
+<div class="note">Every meal shared matters. Every helping hand makes a difference. 🌱</div>
+<footer><b>FoodShare 🍲</b><span>Share food. Save lives.</span></footer>
+<script>function logout(e){e.preventDefault();localStorage.removeItem('foodshareLoggedIn');localStorage.removeItem('foodshareCurrentUser');window.location.href='signin.html';}</script>
+</body></html>
